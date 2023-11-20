@@ -1,0 +1,37 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>Phieu nhap sach</h1>
+
+<form action="" method="POST">
+    {% csrf_token %}
+    
+    {{cttg_form.ma_dau_sach.label}}
+    {{cttg_form.ma_dau_sach}}
+    {{dausach_form.ten_dau_sach.label}}
+    {{dausach_form.ten_dau_sach}}
+    {{dausach_form.ma_the_loai.label}}
+    {{dausach_form.ma_the_loai}}
+    {{theloai_form.ten_the_loai.label}}
+    {{theloai_form.ten_the_loai}}
+    {{cttg_form.ma_tac_gia.label}}
+    {{cttg_form.ma_tac_gia}}
+    {{tacgia_form.ten_tac_gia.label}}
+    {{tacgia_form.ten_tac_gia}}
+    {{ctpns_form.ma_sach.label}}
+    {{ctpns_form.ma_sach}}
+    {{sach_form.nha_xuat_ban.label}}
+    {{sach_form.nha_xuat_ban}}
+    {{sach_form.nam_xuat_ban.label}}
+    {{sach_form.nam_xuat_ban}}
+    {{ctpns_form.ma_phieu_nhap.label}}
+    {{ctpns_form.ma_phieu_nhap}}
+    {{ctpns_form.so_luong_nhap.label}}
+    {{ctpns_form.so_luong_nhap}}
+    {{ctpns_form.don_gia_nhap.label}}
+    {{ctpns_form.don_gia_nhap}}
+    <input type="submit" value="Nhap sach">
+
+</form>
+
+{% endblock %}
