@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO
-from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm
+from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien
+from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm
 
 # Create your views here.
 
@@ -15,7 +15,6 @@ def book(request, pk):
 
 # Lap phieu nhap sach
 def importBook(request):
-
     if request.method == 'POST':
         theloai_form = TheLoaiForm(request.POST, prefix = "theloai")
         tacgia_form = TacGiaForm(request.POST, prefix = "tacgia")
@@ -25,7 +24,7 @@ def importBook(request):
         phieunhapsach_form = PhieuNhapSachForm(request.POST, prefix = "phieunhapsach")
         ctpns_form = CTPNSForm(request.POST, prefix = "ctpns")
         if theloai_form.is_valid() and tacgia_form.is_valid() and dausach_form.is_valid() and cttg_form.is_valid() and sach_form.is_valid() and phieunhapsach_form.is_valid() and ctpns_form.is_valid():
-            print("Import successfully!")
+            print("Import book successfully!")
             
             cttg = cttg_form.save(commit=False)
             theloai = theloai_form.save(commit=False)
@@ -121,7 +120,7 @@ def importBook(request):
                 
             return redirect('books')
         else:
-            print("Import failed!")
+            print("Import book failed!")
     else:
         theloai_form = TheLoaiForm(prefix = "theloai")
         tacgia_form = TacGiaForm(prefix = "tacgia")
@@ -141,3 +140,44 @@ def importBook(request):
         'ctpns_form': ctpns_form,
     }
     return render(request, 'books/book-import-form.html', context)
+
+
+def createReceipt(request):
+    if request.method == 'POST':
+        khachhang_form = KhachHangForm(request.POST, prefix = "khachhang")
+        phieuthutien_form = PhieuThuTienForm(request.POST, prefix = "phieuthutien")
+        if khachhang_form.is_valid() and phieuthutien_form.is_valid():
+            print("Create receipt successfully!")
+
+            khachhang = khachhang_form.save(commit=False)
+            phieuthutien = phieuthutien_form.save(commit=False)
+
+            # Kiem tra ma khach hang da co trong table KhachHang hay chua?
+            check_khach_hang = KhachHang.objects.filter(ma_kh=phieuthutien.ma_kh_id).exists()
+            if check_khach_hang:
+                khachhang = KhachHang.objects.get(ma_kh=phieuthutien.ma_kh_id)
+            else:
+                if khachhang.hoten_kh != None:
+                    khachhang = khachhang_form.save()
+
+            ma_kh = KhachHang.objects.get(ma_kh=khachhang.ma_kh)
+            phieuthutien = PhieuThuTien(
+                ma_kh=ma_kh,
+                so_tien_thu=phieuthutien.so_tien_thu
+            )
+            phieuthutien.save()
+            
+            return redirect('books')
+
+        else:
+            print("Create receipt failed!")
+
+    else:
+        khachhang_form = KhachHangForm(prefix = "khachhang")
+        phieuthutien_form = PhieuThuTienForm(prefix = "phieuthutien")
+
+    context = {
+        'khachhang_form': khachhang_form,
+        'phieuthutien_form': phieuthutien_form,
+    }
+    return render(request, 'books/receipt-form.html', context)

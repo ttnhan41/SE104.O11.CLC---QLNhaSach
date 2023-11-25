@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS
+from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, KhachHang, PhieuThuTien
 
 class TheLoaiForm(ModelForm):
     class Meta:
@@ -37,4 +37,16 @@ class CTPNSForm(ModelForm):
     class Meta:
         model = CT_PNS
         fields = ['ma_phieu_nhap', 'ma_sach', 'so_luong_nhap', 'don_gia_nhap']
+
+
+class KhachHangForm(ModelForm):
+    class Meta:
+        model = KhachHang
+        fields = ['hoten_kh', 'dia_chi', 'dien_thoai', 'email']
+
+
+class PhieuThuTienForm(ModelForm):
+    class Meta:
+        model = PhieuThuTien
+        fields = ['ma_kh', 'so_tien_thu']
         

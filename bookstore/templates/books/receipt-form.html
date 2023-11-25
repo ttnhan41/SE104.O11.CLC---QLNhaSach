@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>Phieu thu tien</h1>
+
+<form action="" method="POST">
+    {% csrf_token %}
+
+    {{phieuthutien_form.ma_kh.label}}
+    {{phieuthutien_form.ma_kh}}
+    {{khachhang_form.hoten_kh.label}}
+    {{khachhang_form.hoten_kh}}
+    {{khachhang_form.dia_chi.label}}
+    {{khachhang_form.dia_chi}}
+    {{khachhang_form.dien_thoai.label}}
+    {{khachhang_form.dien_thoai}}
+    {{khachhang_form.email.label}}
+    {{khachhang_form.email}}
+    {{phieuthutien_form.so_tien_thu.label}}
+    {{phieuthutien_form.so_tien_thu}}
+
+    <input type="submit" value="Thu tien">
+
+</form>
+
+{% endblock %}
