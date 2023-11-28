@@ -1,6 +1,8 @@
 # Project: Quản lý nhà sách - SE104
 # Board: https://trello.com/b/54UrvM8w/qlnsse104
 # Members:
+* 21522411 - Trần Trọng Nhân
+
 # Installation:
 * 1 - Tải python phiên bản mới nhất
 * 2 - Clone repo https://github.com/ttnhan41/SE104.O11.CLC-QLNhaSach
