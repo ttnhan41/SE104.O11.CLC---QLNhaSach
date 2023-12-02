@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.db.models import Q
 from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien
 from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm
 
-# Create your views here.
-
-# Trang thong tin cua tat ca sach
-def books(request):
-    return render(request, 'books/books.html')
+# Trang thong tin nha sach
+def bookstore(request):
+    return render(request, 'books/bookstore-info.html')
 
 # Trang thong tin chi tiet cua 1 sach
 def book(request, pk):
@@ -74,6 +73,10 @@ def importBook(request):
                     ma_tac_gia=ma_tac_gia
                 )
                 cttg.save()
+            else:
+                check_cttg = CT_TACGIA.objects.filter(ma_tac_gia=cttg.ma_tac_gia_id, ma_dau_sach=cttg.ma_dau_sach_id).exists()
+                if check_cttg == False:
+                    cttg.save()
             
             # Kiem tra ma sach da co trong table Sach hay chua?
             check_sach = Sach.objects.filter(ma_sach=ctpns.ma_sach_id).exists()
@@ -89,6 +92,20 @@ def importBook(request):
                     )
                     sach.save()
             
+            # Cap nhat tac gia cho sach
+            sach = Sach.objects.get(ma_sach=sach.ma_sach, ma_dau_sach=dausach.ma_dau_sach)
+            ds_tacgia = CT_TACGIA.objects.filter(ma_dau_sach=dausach.ma_dau_sach)
+            tacgia_info = []
+            for tacgia in ds_tacgia:
+                tacgia_info.append(TacGia.objects.get(ma_tac_gia=tacgia.ma_tac_gia_id))
+            
+            tacgia_list = []
+            for info in tacgia_info:
+                tacgia_list.append(info.ten_tac_gia)
+            
+            sach.tac_gia = ", ".join(tacgia_list)
+            sach.save()
+
             # Kiem tra ma phieu nhap da co trong table PhieuNhapSach hay chua?
             check_phieu_nhap_sach = PhieuNhapSach.objects.filter(ma_phieu_nhap=ctpns.ma_phieu_nhap_id).exists()
             if check_phieu_nhap_sach:
@@ -118,7 +135,7 @@ def importBook(request):
                 phieunhapsach.tong_tien += ctpns.thanh_tien
                 phieunhapsach.save()
                 
-            return redirect('books')
+            return redirect('bookstore')
         else:
             print("Import book failed!")
     else:
@@ -167,7 +184,7 @@ def createReceipt(request):
             )
             phieuthutien.save()
             
-            return redirect('books')
+            return redirect('bookstore')
 
         else:
             print("Create receipt failed!")
@@ -181,3 +198,24 @@ def createReceipt(request):
         'phieuthutien_form': phieuthutien_form,
     }
     return render(request, 'books/receipt-form.html', context)
+
+
+# Tra cuu sach
+def searchBooks(request):
+    search_query = ''
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    
+    books = Sach.objects.filter(
+        Q(ma_dau_sach__ten_dau_sach__icontains=search_query) | 
+        Q(ma_dau_sach__ma_the_loai__ten_the_loai__icontains=search_query) | 
+        Q(nha_xuat_ban__icontains=search_query) | 
+        Q(nam_xuat_ban__icontains=search_query) | 
+        Q(so_luong_ton__icontains=search_query) | 
+        Q(gia_tien__icontains=search_query) | 
+        Q(tac_gia__icontains=search_query)
+    )
+
+    context = {'books': books, 'search_query': search_query}
+    return render(request, 'books/search-books.html', context)

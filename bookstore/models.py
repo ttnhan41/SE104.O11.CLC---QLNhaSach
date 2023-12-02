@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 
 class TheLoai(models.Model):
     ma_the_loai = models.AutoField(auto_created=True, primary_key=True)
@@ -30,11 +29,6 @@ class CT_TACGIA(models.Model):
 
     def __str__(self):
         return str(self.id)
-    '''
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['ma_dau_sach', 'ma_tac_gia'], name='unique_ct_tacgia'),
-        ]'''
 
 class Sach(models.Model):
     ma_sach = models.AutoField(auto_created=True, primary_key=True)
@@ -43,6 +37,7 @@ class Sach(models.Model):
     nam_xuat_ban = models.IntegerField(null=True, blank=True)
     so_luong_ton = models.IntegerField(null=True, blank=True, default=0)
     gia_tien = models.FloatField(null=True, blank=True, default=0)
+    tac_gia = models.TextField(null=True, blank=True) # Tao field nay de tra cuu sach theo tac gia
 
     def __str__(self):
         return str(self.ma_sach)

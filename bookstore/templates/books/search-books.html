@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>Books</h1>
+
+<form class="form" action="{% url 'search-books' %}" method="get">
+    <label for="books-search">Tra cuu sach</label>
+    <input type="search" id="books-search" name="search_query" value="{{search_query}}">
+
+    <input type="submit" value="Tra cuu">
+</form>
+
+{% for book in books %}
+<p style="border: 1px solid black;">
+    <strong>Ten sach:</strong> {{book.ma_dau_sach.ten_dau_sach}}<br>
+    <strong>The loai:</strong> {{book.ma_dau_sach.ma_the_loai.ten_the_loai}}<br>
+    <strong>Tac gia:</strong> {{book.tac_gia}}<br>
+    <strong>Nha xuat ban:</strong> {{book.nha_xuat_ban}}<br>
+    <strong>Nam xuat ban:</strong> {{book.nam_xuat_ban}}<br>
+    <strong>So luong:</strong> {{book.so_luong_ton}}<br>
+    <strong>Gia tien:</strong> {{book.gia_tien}}
+</p>
+{% endfor %}
+
+{% endblock content %}
