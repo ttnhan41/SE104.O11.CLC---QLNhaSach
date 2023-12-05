@@ -6,11 +6,11 @@ from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, Phi
 
 # Trang thong tin nha sach
 def bookstore(request):
-    return render(request, 'books/bookstore-info.html')
+    return render(request, 'bookstore/bookstore-info.html')
 
 # Trang thong tin chi tiet cua 1 sach
 def book(request, pk):
-    return render(request, 'books/single-book.html')
+    return render(request, 'bookstore/single-book.html')
 
 # Lap phieu nhap sach
 def importBook(request):
@@ -156,7 +156,7 @@ def importBook(request):
         'phieunhapsach_form': phieunhapsach_form,
         'ctpns_form': ctpns_form,
     }
-    return render(request, 'books/book-import-form.html', context)
+    return render(request, 'bookstore/book-import-form.html', context)
 
 
 def createReceipt(request):
@@ -197,7 +197,7 @@ def createReceipt(request):
         'khachhang_form': khachhang_form,
         'phieuthutien_form': phieuthutien_form,
     }
-    return render(request, 'books/receipt-form.html', context)
+    return render(request, 'bookstore/receipt-form.html', context)
 
 
 # Tra cuu sach
@@ -218,4 +218,23 @@ def searchBooks(request):
     )
 
     context = {'books': books, 'search_query': search_query}
-    return render(request, 'books/search-books.html', context)
+    return render(request, 'bookstore/search-books.html', context)
+
+
+# Tra cuu khach hang
+def searchGuests(request):
+    search_query = ''
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    
+    guests = KhachHang.objects.filter(
+        Q(hoten_kh__icontains=search_query) | 
+        Q(dia_chi__icontains=search_query) | 
+        Q(dien_thoai__icontains=search_query) | 
+        Q(email__icontains=search_query) | 
+        Q(so_tien_no__icontains=search_query)
+    )
+
+    context = {'guests': guests, 'search_query': search_query}
+    return render(request, 'bookstore/search-guests.html', context)

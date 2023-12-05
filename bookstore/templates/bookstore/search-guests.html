@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>Guests</h1>
+
+<form class="form" action="{% url 'search-guests' %}" method="get">
+    <label for="guests-search">Tra cuu khach hang</label>
+    <input type="search" id="guests-search" name="search_query" value="{{search_query}}">
+
+    <input type="submit" value="Tra cuu">
+</form>
+
+{% for guest in guests %}
+<p style="border: 1px solid black;">
+    <strong>Ho ten khach hang:</strong> {{guest.hoten_kh}}<br>
+    <strong>Dia chi:</strong> {{guest.dia_chi}}<br>
+    <strong>Dien thoai:</strong> {{guest.dien_thoai}}<br>
+    <strong>Email:</strong> {{guest.email}}<br>
+    <strong>So tien no:</strong> {{guest.so_tien_no}}<br>
+</p>
+{% endfor %}
+
+{% endblock content %}

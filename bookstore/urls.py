@@ -7,4 +7,5 @@ urlpatterns = [
     path('import-book/', views.importBook, name="import-book"),
     path('create-receipt/', views.createReceipt, name="create-receipt"),
     path('search-books/', views.searchBooks, name="search-books"),
+    path('search-guests/', views.searchGuests, name="search-guests"),
 ]
