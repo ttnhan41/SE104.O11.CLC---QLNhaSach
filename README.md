@@ -2,6 +2,9 @@
 # Board: https://trello.com/b/54UrvM8w/qlnsse104
 # Members:
 * 21522411 - Trần Trọng Nhân
+* 215206677 - Lâm Phạm Vĩnh Đan
+* 21521029 - Tô Quốc Kiện
+* 21520692 - Đào Tiến Đạt
 
 # Installation:
 * 1 - Tải python phiên bản mới nhất
