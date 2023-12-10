@@ -1,6 +1,16 @@
-<h1>Logo</h1>
-<a href="{% url 'import-book' %}">Import books</a>
-<a href="{% url 'create-receipt' %}">Create receipts</a>
-<a href="{% url 'search-books' %}">Search books</a>
-<a href="{% url 'search-guests' %}">Search guests</a>
-<hr>
+{% load static %}
+
+<ul>
+    <li><a href="/">Home page</a></li>
+    <li><a href="{% url 'import-book' %}">Import books</a></li>
+    <li><a href="{% url 'create-books-bill' %}">Create books bill</a></li>
+    <li><a href="{% url 'create-receipt' %}">Create receipts</a></li>
+    <li><a href="{% url 'search-books' %}">Search books</a></li>
+    <li><a href="{% url 'search-guests' %}">Search guests</a></li>
+    <li><a href="{% url 'search-bills' %}">Search bills</a></li>
+    <li><a href="adminManageBooks.html">Books Management</a></li>
+    <li><a href="buyerAndborrower.html">Users Management</a></li>
+    <!-- <button class="joinbtn" onclick="mainApp.logOut()">LOG OUT</button> -->
+
+    <li><a href="admin_Login.html">Logout</a></li>
+</ul>

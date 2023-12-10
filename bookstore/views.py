@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Q
-from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien
-from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm
+from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien, HoaDon, CT_HD
+from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm, HoaDonForm, CTHDForm
 
 # Trang thong tin nha sach
 def bookstore(request):
@@ -19,12 +19,11 @@ def importBook(request):
         tacgia_form = TacGiaForm(request.POST, prefix = "tacgia")
         dausach_form = DauSachForm(request.POST, prefix = "dausach")
         cttg_form = CTTGForm(request.POST, prefix = "cttg")
-        sach_form = SachForm(request.POST, prefix = "sach")
+        sach_form = SachForm(request.POST, request.FILES, prefix = "sach")
         phieunhapsach_form = PhieuNhapSachForm(request.POST, prefix = "phieunhapsach")
         ctpns_form = CTPNSForm(request.POST, prefix = "ctpns")
         if theloai_form.is_valid() and tacgia_form.is_valid() and dausach_form.is_valid() and cttg_form.is_valid() and sach_form.is_valid() and phieunhapsach_form.is_valid() and ctpns_form.is_valid():
-            print("Import book successfully!")
-            
+                     
             cttg = cttg_form.save(commit=False)
             theloai = theloai_form.save(commit=False)
             dausach = dausach_form.save(commit=False)
@@ -32,6 +31,11 @@ def importBook(request):
             sach = sach_form.save(commit=False)
             phieunhapsach = phieunhapsach_form.save(commit=False)
             ctpns = ctpns_form.save(commit=False)
+
+            if ctpns.so_luong_nhap < THAMSO.objects.all()[0].sl_nhap_toi_thieu:
+                print("The number of books imported must be at least 150!")
+                print("Import book failed!")
+                return redirect('import-book')
             
             # Kiem tra ma the loai da co trong table TheLoai hay chua?
             check_the_loai = TheLoai.objects.filter(ma_the_loai=dausach.ma_the_loai_id).exists()
@@ -85,13 +89,14 @@ def importBook(request):
             else:
                 if sach.nha_xuat_ban != None and sach.nam_xuat_ban != None:
                     ma_dau_sach = DauSach.objects.get(ma_dau_sach=dausach.ma_dau_sach)
-                    sach = Sach(
-                        ma_dau_sach=ma_dau_sach,
-                        nha_xuat_ban=sach.nha_xuat_ban,
-                        nam_xuat_ban=sach.nam_xuat_ban
-                    )
+                    sach.ma_dau_sach = ma_dau_sach 
                     sach.save()
             
+            if sach.so_luong_ton > THAMSO.objects.all()[0].sl_ton_toi_da:
+                print("Only import books which are fewer than 300!")
+                print("Import book failed!")
+                return redirect('import-book')
+
             # Cap nhat tac gia cho sach
             sach = Sach.objects.get(ma_sach=sach.ma_sach, ma_dau_sach=dausach.ma_dau_sach)
             ds_tacgia = CT_TACGIA.objects.filter(ma_dau_sach=dausach.ma_dau_sach)
@@ -134,7 +139,8 @@ def importBook(request):
                 phieunhapsach = PhieuNhapSach.objects.get(ma_phieu_nhap=ctpns.ma_phieu_nhap_id)
                 phieunhapsach.tong_tien += ctpns.thanh_tien
                 phieunhapsach.save()
-                
+                print("Import book successfully!")
+            
             return redirect('bookstore')
         else:
             print("Import book failed!")
@@ -159,12 +165,12 @@ def importBook(request):
     return render(request, 'bookstore/book-import-form.html', context)
 
 
+# Lap phieu thu tien
 def createReceipt(request):
     if request.method == 'POST':
         khachhang_form = KhachHangForm(request.POST, prefix = "khachhang")
         phieuthutien_form = PhieuThuTienForm(request.POST, prefix = "phieuthutien")
         if khachhang_form.is_valid() and phieuthutien_form.is_valid():
-            print("Create receipt successfully!")
 
             khachhang = khachhang_form.save(commit=False)
             phieuthutien = phieuthutien_form.save(commit=False)
@@ -177,13 +183,21 @@ def createReceipt(request):
                 if khachhang.hoten_kh != None:
                     khachhang = khachhang_form.save()
 
-            ma_kh = KhachHang.objects.get(ma_kh=khachhang.ma_kh)
             phieuthutien = PhieuThuTien(
-                ma_kh=ma_kh,
+                ma_kh=khachhang,
                 so_tien_thu=phieuthutien.so_tien_thu
             )
-            phieuthutien.save()
-            
+            kh = KhachHang.objects.get(ma_kh=khachhang.ma_kh)
+            if phieuthutien.so_tien_thu <= kh.so_tien_no:
+                kh.so_tien_no -= phieuthutien.so_tien_thu
+                kh.save()
+                phieuthutien.save()
+                print("Create receipt successfully!")
+            else:
+                print("The amount collected must not exceed the amount the customer owes!")
+                print("Create receipt failed!")
+                return redirect('create-receipt')
+  
             return redirect('bookstore')
 
         else:
@@ -208,6 +222,7 @@ def searchBooks(request):
         search_query = request.GET.get('search_query')
     
     books = Sach.objects.filter(
+        Q(ma_sach__icontains=search_query) | 
         Q(ma_dau_sach__ten_dau_sach__icontains=search_query) | 
         Q(ma_dau_sach__ma_the_loai__ten_the_loai__icontains=search_query) | 
         Q(nha_xuat_ban__icontains=search_query) | 
@@ -229,6 +244,7 @@ def searchGuests(request):
         search_query = request.GET.get('search_query')
     
     guests = KhachHang.objects.filter(
+        Q(ma_kh__icontains=search_query) | 
         Q(hoten_kh__icontains=search_query) | 
         Q(dia_chi__icontains=search_query) | 
         Q(dien_thoai__icontains=search_query) | 
@@ -238,3 +254,163 @@ def searchGuests(request):
 
     context = {'guests': guests, 'search_query': search_query}
     return render(request, 'bookstore/search-guests.html', context)
+
+
+# Lap hoa don ban sach
+def createBooksBill(request):
+    if request.method == 'POST':
+        khachhang_form = KhachHangForm(request.POST, prefix = "khachhang")
+        hoadon_form = HoaDonForm(request.POST, prefix = "hoadon")
+        cthd_form = CTHDForm(request.POST, prefix = "cthd")
+        
+        if khachhang_form.is_valid() and hoadon_form.is_valid() and cthd_form.is_valid():
+            
+            khachhang = khachhang_form.save(commit=False)
+            hoadon = hoadon_form.save(commit=False)
+            cthd = cthd_form.save(commit=False)
+            
+            # Kiem tra ma khach hang da co trong table KhachHang hay chua?
+            check_khach_hang = KhachHang.objects.filter(ma_kh=hoadon.ma_kh_id).exists()
+            if check_khach_hang:
+                khachhang = KhachHang.objects.get(ma_kh=hoadon.ma_kh_id)
+                if khachhang.so_tien_no > THAMSO.objects.all()[0].so_tien_no_toi_da:
+                    print("This guest's debt is over 1000000 VND")
+                    print("Create books bill failed!")
+                    return redirect('create-books-bill')
+            else:
+                if khachhang.hoten_kh != None:
+                    khachhang = khachhang_form.save()
+
+            # Kiem tra ma hoa don da co trong table HoaDon hay chua?
+            check_hoa_don = HoaDon.objects.filter(ma_hoa_don=cthd.ma_hoa_don_id).exists()
+            if check_hoa_don:
+                hoadon = HoaDon.objects.get(ma_hoa_don=cthd.ma_hoa_don_id)
+            else:
+                ma_kh = KhachHang.objects.get(ma_kh=khachhang.ma_kh)
+                hoadon = HoaDon(
+                    ma_kh=ma_kh
+                )
+                hoadon.save()
+
+            # Kiem tra ma hoa don va ma sach da co trong table CT_HD hay chua?
+            check_hoa_don = CT_HD.objects.filter(ma_hoa_don=hoadon.ma_hoa_don).exists()
+            check_sach = CT_HD.objects.filter(ma_sach=cthd.ma_sach_id).exists()
+            if check_hoa_don == False or check_sach == False:
+                ma_hoa_don = HoaDon.objects.get(ma_hoa_don=hoadon.ma_hoa_don)
+                ma_sach = Sach.objects.get(ma_sach=cthd.ma_sach_id)
+                cthd = CT_HD(
+                    ma_hoa_don=ma_hoa_don,
+                    ma_sach=ma_sach,
+                    so_luong_ban=cthd.so_luong_ban,
+                    don_gia_ban=ma_sach.gia_tien,
+                    thanh_tien=cthd.so_luong_ban*ma_sach.gia_tien
+                )
+                
+                sach = Sach.objects.get(ma_sach=cthd.ma_sach_id)
+                ds_sach = Sach.objects.filter(ma_dau_sach=sach.ma_dau_sach)
+                tong_sl_sach_cua_ds = 0
+                for s in ds_sach:
+                    tong_sl_sach_cua_ds += s.so_luong_ton
+
+                tong_sl_sach_cua_ds -= cthd.so_luong_ban
+                if tong_sl_sach_cua_ds < THAMSO.objects.all()[0].sl_ton_toi_thieu_sau_ban:
+                    print("The number of books after selling must be at least 20!")
+                    print("Create books bill failed!")
+                    return redirect('create-books-bill')
+                
+                if (sach.so_luong_ton < cthd.so_luong_ban):
+                    print("The number of books selling must not be bigger than the number of books stored")
+                    print("Create books bill failed!")
+                    return redirect('create-books-bill')
+
+                sach.so_luong_ton -= cthd.so_luong_ban
+                sach.save()
+                cthd.save()
+                hoadon = HoaDon.objects.get(ma_hoa_don=cthd.ma_hoa_don_id)
+                hoadon.tong_tien += cthd.thanh_tien
+                hoadon.save()
+                print("Create books bill successfully!")
+
+            return redirect('bookstore')
+        else:
+            print("Create books bill failed!")
+    else:
+        khachhang_form = KhachHangForm(prefix = "khachhang")
+        hoadon_form = HoaDonForm(prefix = "hoadon")
+        cthd_form = CTHDForm(prefix = "cthd")
+
+    context = {
+        'khachhang_form': khachhang_form,
+        'hoadon_form': hoadon_form,
+        'cthd_form': cthd_form,
+    }
+    return render(request, 'bookstore/books-bill-form.html', context)
+
+
+# Nhap so tien tra
+def inputPayment(request):
+    if request.method == 'POST':
+        hoadon_form = HoaDonForm(request.POST, prefix = "hoadon")
+        cthd_form = CTHDForm(request.POST, prefix = "cthd")
+        
+        if hoadon_form.is_valid() and cthd_form.is_valid():
+            
+            hoadon = hoadon_form.save(commit=False)
+            cthd = cthd_form.save(commit=False)
+            
+            # Kiem tra ma hoa don
+            check_hoa_don = HoaDon.objects.filter(ma_hoa_don=cthd.ma_hoa_don_id).exists()
+            if check_hoa_don:
+                hd = HoaDon.objects.get(ma_hoa_don=cthd.ma_hoa_don_id)
+            else:
+                print("Please input bill id")
+                print("Input payment failed!")
+                return redirect('input-payment')
+
+            hd.so_tien_tra = hoadon.so_tien_tra
+            # Kiem tra so tien tra
+            if hd.so_tien_tra >= hd.tong_tien:
+                hd.con_lai = hd.so_tien_tra - hd.tong_tien
+                hd.save()
+                print("Input payment successfully!")
+            else:
+                hd.con_lai = hd.so_tien_tra - hd.tong_tien
+                hd.save()
+                print("Input payment successfully!")
+                kh = KhachHang.objects.get(ma_kh=hd.ma_kh_id)
+                kh.so_tien_no -= hd.con_lai
+                kh.save()
+                print("The guest's debt has been updated!") 
+
+            return redirect('bookstore')
+        else:
+            print("Input payment failed!")
+    else:
+        hoadon_form = HoaDonForm(prefix = "hoadon")
+        cthd_form = CTHDForm(prefix = "cthd")
+
+    context = {
+        'hoadon_form': hoadon_form,
+        'cthd_form': cthd_form,
+    }
+    return render(request, 'bookstore/input-payment.html', context)
+
+
+# Tra cuu hoa don
+def searchBills(request):
+    search_query = 0
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    
+    bill_detail = CT_HD.objects.filter(
+        Q(ma_hoa_don__exact=search_query)
+    )
+    
+    if search_query != 0 and HoaDon.objects.filter(ma_hoa_don=search_query).count() != 0:
+        bill = HoaDon.objects.get(ma_hoa_don=search_query)
+    else:
+        bill = HoaDon.objects.filter(ma_hoa_don=search_query)
+
+    context = {'bill_detail': bill_detail, 'bill': bill, 'search_query': search_query}
+    return render(request, 'bookstore/search-bills.html', context)

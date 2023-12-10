@@ -1,0 +1,16 @@
+{% include 'navbar.html' %}
+<h1>Nhap so tien tra</h1>
+
+<form action="" method="POST">
+    {% csrf_token %}
+
+    {{cthd_form.ma_hoa_don.label}}
+    {{cthd_form.ma_hoa_don}}
+    {{hoadon_form.so_tien_tra.label}}
+    {{hoadon_form.so_tien_tra}}
+    
+    <input type="submit" value="Thu tien">
+
+</form>
+
+

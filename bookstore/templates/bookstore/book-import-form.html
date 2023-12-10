@@ -1,37 +1,89 @@
-{% extends 'main.html' %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book import</title>
+    <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/book-import.css' %}" />
+  </head>
 
-{% block content %}
-<h1>Phieu nhap sach</h1>
+  <body>
+    <nav>
+      {% include 'navbar.html' %}
+    </nav>
+   
+    <div id="input-box">
+      
+      <div class="input-data">
+        <a href="adminManageBooks.html">
+          <img class="arrow" src="{% static 'images/arrow.png' %}" >
+        </a>
+        <h2>Lập phiếu nhập sách</h2>
+        
+        <form class="form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="grid-item">
+              <span>Mã đầu sách:</span>
+              <span>{{cttg_form.ma_dau_sach}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Tên đầu sách:</span>
+              <span>{{dausach_form.ten_dau_sach}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Mã thể loại:</span>
+              <span>{{dausach_form.ma_the_loai}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Tên thể loại:</span>
+              <span>{{theloai_form.ten_the_loai}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Mã tác giả:</span>
+              <span>{{cttg_form.ma_tac_gia}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Tên tác giả:</span>
+              <span>{{tacgia_form.ten_tac_gia}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Mã sách:</span>
+              <span>{{ctpns_form.ma_sach}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Nhà xuất bản:</span>
+              <span>{{sach_form.nha_xuat_ban}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Năm xuất bản:</span>
+              <span>{{sach_form.nam_xuat_ban}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Mã phiếu nhập:</span>
+              <span>{{ctpns_form.ma_phieu_nhap}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Số lượng nhập:</span>
+              <span>{{ctpns_form.so_luong_nhap}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Đơn giá nhập:</span>
+              <span>{{ctpns_form.don_gia_nhap}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Hình ảnh sách:</span>
+              <span>{{sach_form.hinh_anh}}</span>
+            </div>
+            <div class="grid-item">
+              <input type="submit" value="Lập phiếu">
+            </div>
+        
+        </form>
+      </div>
 
-<form action="" method="POST">
-    {% csrf_token %}
-    
-    {{cttg_form.ma_dau_sach.label}}
-    {{cttg_form.ma_dau_sach}}
-    {{dausach_form.ten_dau_sach.label}}
-    {{dausach_form.ten_dau_sach}}
-    {{dausach_form.ma_the_loai.label}}
-    {{dausach_form.ma_the_loai}}
-    {{theloai_form.ten_the_loai.label}}
-    {{theloai_form.ten_the_loai}}
-    {{cttg_form.ma_tac_gia.label}}
-    {{cttg_form.ma_tac_gia}}
-    {{tacgia_form.ten_tac_gia.label}}
-    {{tacgia_form.ten_tac_gia}}
-    {{ctpns_form.ma_sach.label}}
-    {{ctpns_form.ma_sach}}
-    {{sach_form.nha_xuat_ban.label}}
-    {{sach_form.nha_xuat_ban}}
-    {{sach_form.nam_xuat_ban.label}}
-    {{sach_form.nam_xuat_ban}}
-    {{ctpns_form.ma_phieu_nhap.label}}
-    {{ctpns_form.ma_phieu_nhap}}
-    {{ctpns_form.so_luong_nhap.label}}
-    {{ctpns_form.so_luong_nhap}}
-    {{ctpns_form.don_gia_nhap.label}}
-    {{ctpns_form.don_gia_nhap}}
-    <input type="submit" value="Nhap sach">
-
-</form>
-
-{% endblock %}
+    </div>
+  </body>
+</html> 

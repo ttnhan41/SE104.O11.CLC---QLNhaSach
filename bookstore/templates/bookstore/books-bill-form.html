@@ -1,0 +1,24 @@
+{% include 'navbar.html' %}
+<h1>Hoa don ban sach</h1>
+
+<form action="" method="POST">
+    {% csrf_token %}
+
+    {{hoadon_form.ma_kh.label}}
+    {{hoadon_form.ma_kh}}
+    {{khachhang_form.hoten_kh.label}}
+    {{khachhang_form.hoten_kh}}
+    {{cthd_form.ma_hoa_don.label}}
+    {{cthd_form.ma_hoa_don}}
+    {{cthd_form.ma_sach.label}}
+    {{cthd_form.ma_sach}}
+    {{cthd_form.so_luong_ban.label}}
+    {{cthd_form.so_luong_ban}}
+
+    <input type="submit" value="Lap hoa don">
+
+</form>
+
+<a href="{% url 'bookstore' %}">Back to main page</a>
+<a href="{% url 'input-payment' %}">Input payment</a>
+

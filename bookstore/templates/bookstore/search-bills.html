@@ -1,0 +1,32 @@
+{% include 'navbar.html' %}
+<h1>Bills</h1>
+
+<form class="form" action="{% url 'search-bills' %}" method="get">
+    <label for="bills-search">Nhap ma hoa don</label>
+    <input type="search" id="bills-search" name="search_query" value="{{search_query}}">
+
+    <input type="submit" value="Tra cuu">
+</form>
+
+<span style="display: inline-block; margin-left: 4em"><strong>Ma sach</strong></span>
+<span style="display: inline-block; margin-left: 4em"><strong>Ten sach</strong></span>
+<span style="display: inline-block; margin-left: 8em"><strong>So luong ban</strong></span>
+<span style="display: inline-block; margin-left: 8em"><strong>Don gia ban</strong></span>
+<span style="display: inline-block; margin-left: 4em"><strong>Thanh tien</strong></span>
+
+{% for detail in bill_detail %}
+<p style="border: 1px solid black;">
+    <span style="display: inline-block; margin-left: 4em">{{detail.ma_sach}}</span>
+    <span style="display: inline-block; margin-left: 4em">{{detail.ma_sach.ma_dau_sach.ten_dau_sach}}</span>
+    <span style="display: inline-block; margin-left: 8em">{{detail.so_luong_ban}}</span>
+    <span style="display: inline-block; margin-left: 8em">{{detail.don_gia_ban}}</span>
+    <span style="display: inline-block; margin-left: 6em">{{detail.thanh_tien}}</span>
+</p>
+{% endfor %}
+<span style="display: inline-block; margin-left: 45em">Tong tien:</span>
+<span>{{bill.tong_tien}}</span><br>
+<span style="display: inline-block; margin-left: 45em">So tien tra:</span>
+<span>{{bill.so_tien_tra}}</span><br>
+<span style="display: inline-block; margin-left: 45em">Con lai:</span>
+<span>{{bill.con_lai}}</span><br>
+

@@ -1,25 +1,55 @@
-{% extends 'main.html' %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Book search</title>
+        <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/search-books.css' %}" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase.js"></script>
+    </head>
 
-{% block content %}
-<h1>Books</h1>
+    <body>
+        <nav>
+            {% include 'navbar.html' %}
+        </nav>
 
-<form class="form" action="{% url 'search-books' %}" method="get">
-    <label for="books-search">Tra cuu sach</label>
-    <input type="search" id="books-search" name="search_query" value="{{search_query}}">
+        <form class="form" action="{% url 'search-books' %}" method="get">
+            <label for="books-search"><b>Tra cứu sách</b>:</label>
+            <input type="search" id="books-search" name="search_query" value="{{search_query}}">
+            <input type="submit" value="Tìm kiếm">
+        </form>
 
-    <input type="submit" value="Tra cuu">
-</form>
+        <div class="c-grid">
+            {% for book in books %}
+            <article class="c-grid__item">
+                <div class="c-grid__picture" style="width: 150px; height: 200px;">
+                    <img src="{{book.hinh_anh.url}}" style="max-width: 70%;">
+                </div>
+                <div class="c-grid__content">
+                    <p>
+                        <b>{{book.ma_dau_sach.ten_dau_sach}}</b><br>
+                        Tác giả: {{book.tac_gia}}<br>
+                        Mã sách: {{book.ma_sach}}<br>
+                        Mã đầu sách: {{book.ma_dau_sach}}<br>
+                        Thể loại: {{book.ma_dau_sach.ma_the_loai.ten_the_loai}}<br>
+                        Nhà xuất bản: {{book.nha_xuat_ban}}<br>
+                        Năm xuất bản: {{book.nam_xuat_ban}}<br>
+                        Số lượng: {{book.so_luong_ton}}<br>
+                        Giá tiền: {{book.gia_tien}}
+                    </p>
+                    
+                    <div class="container">
+                        <div class="view-details-btn-class">
+                            <a href="book1.html"><button class="view-details-btn">Xem chi tiết</button></a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
 
-{% for book in books %}
-<p style="border: 1px solid black;">
-    <strong>Ten sach:</strong> {{book.ma_dau_sach.ten_dau_sach}}<br>
-    <strong>The loai:</strong> {{book.ma_dau_sach.ma_the_loai.ten_the_loai}}<br>
-    <strong>Tac gia:</strong> {{book.tac_gia}}<br>
-    <strong>Nha xuat ban:</strong> {{book.nha_xuat_ban}}<br>
-    <strong>Nam xuat ban:</strong> {{book.nam_xuat_ban}}<br>
-    <strong>So luong:</strong> {{book.so_luong_ton}}<br>
-    <strong>Gia tien:</strong> {{book.gia_tien}}
-</p>
-{% endfor %}
-
-{% endblock content %}
+    </body>
+</html>

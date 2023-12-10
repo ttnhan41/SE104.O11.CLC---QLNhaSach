@@ -33,6 +33,7 @@ class CT_TACGIA(models.Model):
 class Sach(models.Model):
     ma_sach = models.AutoField(auto_created=True, primary_key=True)
     ma_dau_sach = models.ForeignKey(DauSach, on_delete=models.CASCADE, null=True, blank=True)
+    hinh_anh = models.ImageField(null=True, blank=True, default="default.jpg")
     nha_xuat_ban = models.CharField(max_length=50, null=True, blank=True)
     nam_xuat_ban = models.IntegerField(null=True, blank=True)
     so_luong_ton = models.IntegerField(null=True, blank=True, default=0)
