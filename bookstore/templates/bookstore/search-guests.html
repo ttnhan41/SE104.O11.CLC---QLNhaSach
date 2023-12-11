@@ -1,21 +1,42 @@
-{% include 'navbar.html' %}
-<h1>Guests</h1>
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Guest search</title>
+        <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/search-guests.css' %}" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
 
-<form class="form" action="{% url 'search-guests' %}" method="get">
-    <label for="guests-search">Tra cuu khach hang</label>
-    <input type="search" id="guests-search" name="search_query" value="{{search_query}}">
+    <body>
+        <nav>
+            {% include 'navbar.html' %}
+        </nav>
 
-    <input type="submit" value="Tra cuu">
-</form>
+        <form class="form" action="{% url 'search-guests' %}" method="get">
+            <label for="guests-search"><b>Tra cứu khách hàng</b>:</label>
+            <input type="search" id="guests-search" name="search_query" value="{{search_query}}">
+            <input type="submit" value="Tìm kiếm">
+        </form>
 
-{% for guest in guests %}
-<p style="border: 1px solid black;">
-    <strong>Ma khach hang:</strong> {{guest.ma_kh}}<br>
-    <strong>Ho ten khach hang:</strong> {{guest.hoten_kh}}<br>
-    <strong>Dia chi:</strong> {{guest.dia_chi}}<br>
-    <strong>Dien thoai:</strong> {{guest.dien_thoai}}<br>
-    <strong>Email:</strong> {{guest.email}}<br>
-    <strong>So tien no:</strong> {{guest.so_tien_no}}
-</p>
-{% endfor %}
+        <div class="c-grid">
+            {% for guest in guests %}
+            <article class="c-grid__item">
+                <div class="c-grid__content">
+                    <p>
+                        Mã khách hàng: {{guest.ma_kh}}<br>
+                        Họ tên khách hàng: {{guest.hoten_kh}}<br>
+                        Địa chỉ: {{guest.dia_chi}}<br>
+                        Số điện thoại: {{guest.dien_thoai}}<br>
+                        Email: {{guest.email}}<br>
+                        Số tiền nợ: {{guest.so_tien_no}}
+                    </p>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
 
+    </body>
+</html>

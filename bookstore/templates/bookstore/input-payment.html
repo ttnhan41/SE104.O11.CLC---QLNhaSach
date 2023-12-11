@@ -1,16 +1,48 @@
-{% include 'navbar.html' %}
-<h1>Nhap so tien tra</h1>
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Input payment</title>
+    <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/input-payment.css' %}" />
+  </head>
 
-<form action="" method="POST">
-    {% csrf_token %}
+  <body>
+    <nav>
+      {% include 'navbar.html' %}
+    </nav>
+   
+    <div id="input-box">
+      
+      <div class="input-data">
+        <a href="adminManageBooks.html">
+          <img class="arrow" src="{% static 'images/arrow.png' %}" >
+        </a>
+        <h2>Nhập số tiền trả cho hóa đơn</h2>
+        
+        <form class="form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="grid-item">
+              <span>Mã hóa đơn:</span>
+              <span>{{cthd_form.ma_hoa_don}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Số tiền trả:</span>
+              <span>{{hoadon_form.so_tien_tra}}</span>
+            </div>
+            <div class="grid-item">
+                <span></span>
+                <span></span>
+            </div>
+            <div class="grid-item">
+              <input type="submit" value="Thu tiền">
+            </div>
+        </form>
+      </div>
 
-    {{cthd_form.ma_hoa_don.label}}
-    {{cthd_form.ma_hoa_don}}
-    {{hoadon_form.so_tien_tra.label}}
-    {{hoadon_form.so_tien_tra}}
-    
-    <input type="submit" value="Thu tien">
-
-</form>
-
-
+    </div>
+  </body>
+</html>
