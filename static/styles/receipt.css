@@ -47,7 +47,7 @@ nav li a:hover, nav li a:active {
   position: relative;
   margin: 120px auto 0px auto;
   width: 850px;
-  height: 510px;
+  height: 370px;
   border: black;
   background: white;
   border-radius: 20px;
@@ -77,7 +77,7 @@ form {
 }
 
 .grid-item span:first-child {
-  width: 120px;
+  width: 140px;
 }
 
 a {

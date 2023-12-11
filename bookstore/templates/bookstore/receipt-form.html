@@ -1,22 +1,64 @@
-{% include 'navbar.html' %}
-<h1>Phieu thu tien</h1>
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book selling</title>
+    <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/receipt.css' %}" />
+  </head>
 
-<form action="" method="POST">
-    {% csrf_token %}
+  <body>
+    <nav>
+      {% include 'navbar.html' %}
+    </nav>
+   
+    <div id="input-box">
+      
+      <div class="input-data">
+        <a href="adminManageBooks.html">
+          <img class="arrow" src="{% static 'images/arrow.png' %}" >
+        </a>
+        <h2>Lập phiếu thu tiền</h2>
+        
+        <form class="form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="grid-item">
+              <span>Mã khách hàng:</span>
+              <span>{{phieuthutien_form.ma_kh}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Họ tên khách hàng:</span>
+              <span>{{khachhang_form.hoten_kh}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Địa chỉ:</span>
+              <span>{{khachhang_form.dia_chi}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Số điện thoại:</span>
+              <span>{{khachhang_form.dien_thoai}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Email:</span>
+              <span>{{khachhang_form.email}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Số tiền thu:</span>
+              <span>{{phieuthutien_form.so_tien_thu}}</span>
+            </div>
+            <div class="grid-item">
+                <span></span>
+                <span></span>
+            </div>
+            <div class="grid-item">
+              <input type="submit" value="Lập phiếu">
+            </div>
+        </form>
+      </div>
 
-    {{phieuthutien_form.ma_kh.label}}
-    {{phieuthutien_form.ma_kh}}
-    {{khachhang_form.hoten_kh.label}}
-    {{khachhang_form.hoten_kh}}
-    {{khachhang_form.dia_chi.label}}
-    {{khachhang_form.dia_chi}}
-    {{khachhang_form.dien_thoai.label}}
-    {{khachhang_form.dien_thoai}}
-    {{khachhang_form.email.label}}
-    {{khachhang_form.email}}
-    {{phieuthutien_form.so_tien_thu.label}}
-    {{phieuthutien_form.so_tien_thu}}
-
-    <input type="submit" value="Thu tien">
-
-</form>
+    </div>
+  </body>
+</html> 

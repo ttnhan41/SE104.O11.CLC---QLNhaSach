@@ -47,7 +47,7 @@ nav li a:hover, nav li a:active {
   position: relative;
   margin: 120px auto 0px auto;
   width: 850px;
-  height: 510px;
+  height: 300px;
   border: black;
   background: white;
   border-radius: 20px;
@@ -77,11 +77,18 @@ form {
 }
 
 .grid-item span:first-child {
-  width: 120px;
+  width: 140px;
 }
 
 a {
   text-decoration: none;
+}
+
+.input-payment {
+  text-align: center;
+  box-sizing: border-box;
+  font-size: 13px;
+  padding-top: 9px;
 }
 
 h1, h2 {
@@ -115,7 +122,8 @@ input[type="number"] {
   width: 60px;
 }
 
-input[type="submit"] {
+input[type="submit"],
+a.input-payment {
   margin-top: 10px;
   height: 30px;
   width: 150px;
@@ -131,14 +139,17 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover,
-input[type="submit"]:focus {
+input[type="submit"]:focus,
+a.input-payment:hover,
+a.input-payment:focus {
   opacity: 0.7;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   transition: 0.1s ease;
   font-size: 14px;
 }
 
-input[type="submit"]:active {
+input[type="submit"]:active,
+a.input-payment:active {
   opacity: 1;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
   transition: 0.1s ease;

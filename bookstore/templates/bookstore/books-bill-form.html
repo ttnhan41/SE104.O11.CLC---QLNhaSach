@@ -1,24 +1,63 @@
-{% include 'navbar.html' %}
-<h1>Hoa don ban sach</h1>
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Books bill</title>
+    <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/books-bill.css' %}" />
+  </head>
 
-<form action="" method="POST">
-    {% csrf_token %}
+  <body>
+    <nav>
+      {% include 'navbar.html' %}
+    </nav>
+   
+    <div id="input-box">
+      
+      <div class="input-data">
+        <a href="adminManageBooks.html">
+          <img class="arrow" src="{% static 'images/arrow.png' %}" >
+        </a>
+        <h2>Lập hóa đơn bán sách</h2>
+        
+        <form class="form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="grid-item">
+              <span>Mã khách hàng:</span>
+              <span>{{hoadon_form.ma_kh}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Họ tên khách hàng:</span>
+              <span>{{khachhang_form.hoten_kh}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Mã hóa đơn:</span>
+              <span>{{cthd_form.ma_hoa_don}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Mã sách:</span>
+              <span>{{cthd_form.ma_sach}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Số lượng bán:</span>
+              <span>{{cthd_form.so_luong_ban}}</span>
+            </div>
+            <div class="grid-item">
+                <span></span>
+                <span></span>
+            </div>
+            <div class="grid-item">
+              <input type="submit" value="Lập hóa đơn">
+            </div>
+            <div class="grid-item">
+              <a class="input-payment" href="{% url 'input-payment' %}">Nhập số tiền trả</a>
+            </div> 
+        </form>
+      </div>
 
-    {{hoadon_form.ma_kh.label}}
-    {{hoadon_form.ma_kh}}
-    {{khachhang_form.hoten_kh.label}}
-    {{khachhang_form.hoten_kh}}
-    {{cthd_form.ma_hoa_don.label}}
-    {{cthd_form.ma_hoa_don}}
-    {{cthd_form.ma_sach.label}}
-    {{cthd_form.ma_sach}}
-    {{cthd_form.so_luong_ban.label}}
-    {{cthd_form.so_luong_ban}}
-
-    <input type="submit" value="Lap hoa don">
-
-</form>
-
-<a href="{% url 'bookstore' %}">Back to main page</a>
-<a href="{% url 'input-payment' %}">Input payment</a>
-
+    </div>
+  </body>
+</html> 
