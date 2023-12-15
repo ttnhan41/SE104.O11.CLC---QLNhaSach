@@ -1,0 +1,150 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500);
+*:focus {
+  outline: none;
+}
+
+body {
+  background: #ffffff;
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: row;
+  background-color: black;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+nav li {
+  list-style-type: none;
+}
+
+nav li a:link, nav li a:visited {
+  display: block;
+  width: 200px;
+  height: 45px;
+  text-align: center;
+  text-decoration: none;
+  line-height: 3;
+  color: white;
+}
+
+nav li a:hover, nav li a:active {
+  border: solid 1px white;
+}
+
+#input-box {
+  display: block;
+  position: relative;
+  margin: 120px auto 0px auto;
+  width: 900px;
+  height: 320px;
+  border: black;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  border-bottom: black;
+}
+
+.input-data {
+  box-sizing: border-box;
+  padding: 0px 70px;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin: 5px;
+}
+
+.grid-item {
+  display: flex;
+  align-items: center;
+}
+
+.grid-item span {
+  margin: 0px 3px;
+}
+
+.grid-item span:first-child {
+  width: 270px;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1, h2 {
+  font-size: 28px;
+  font-family: sans-serif;
+  font-weight: bold;
+  padding: 15px 0px 35px 0px;
+  text-align: center;
+}
+
+input[type="text"] {
+  display: block;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  padding-top: 15px;
+  border: none;
+  border-bottom: 1px solid #aaa;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+input[type="text"]:focus {
+  border-bottom: 2px solid #4e4e4e;
+  color: #000000;
+  transition: 0.2s ease;
+}
+
+input[type="number"] {
+  width: 80px;
+}
+
+input[type="submit"] {
+  margin-top: 10px;
+  height: 30px;
+  width: 150px;
+  background: black;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover,
+input[type="submit"]:focus {
+  opacity: 0.7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+  font-size: 14px;
+}
+
+input[type="submit"]:active {
+  opacity: 1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.arrow{
+  width: 25px; 
+  margin-bottom: -6%;
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rules changing</title>
+    <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/change-rules.css' %}" />
+  </head>
+
+  <body>
+    <nav>
+      {% include 'navbar.html' %}
+    </nav>
+   
+    <div id="input-box">
+      
+      <div class="input-data">
+        <a href="adminManageBooks.html">
+          <img class="arrow" src="{% static 'images/arrow.png' %}" >
+        </a>
+        <h2>Thay đổi quy định</h2>
+        
+        <form class="form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="grid-item">
+              <span>Số lượng nhập tối thiểu:</span>
+              <span>{{form.sl_nhap_toi_thieu}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Số lượng tồn tối đa:</span>
+              <span>{{form.sl_ton_toi_da}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Số tiền nợ tối đa:</span>
+              <span>{{form.so_tien_no_toi_da}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Số lượng tồn tối thiểu sau khi bán:</span>
+              <span>{{form.sl_ton_toi_thieu_sau_ban}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Tỉ lệ tính đơn giá bán:</span>
+              <span>{{form.ti_le_tinh_don_gia_ban}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Sử dụng quy định kiểm tra số tiền thu:</span>
+              <span>{{form.kiem_tra_so_tien_thu}}</span>
+            </div>
+            <div class="grid-item">
+              <span></span>
+              <span></span>
+            </div>
+            <div class="grid-item">
+              <input type="submit" value="Thay đổi">
+            </div>
+        
+        </form>
+      </div>
+
+    </div>
+  </body>
+</html> 

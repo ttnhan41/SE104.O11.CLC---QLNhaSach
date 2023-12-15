@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Q
 from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien, HoaDon, CT_HD
-from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm, HoaDonForm, CTHDForm
+from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm, HoaDonForm, CTHDForm, ThamSoForm
 
 # Trang thong tin nha sach
 def bookstore(request):
@@ -188,16 +188,22 @@ def createReceipt(request):
                 so_tien_thu=phieuthutien.so_tien_thu
             )
             kh = KhachHang.objects.get(ma_kh=khachhang.ma_kh)
-            if phieuthutien.so_tien_thu <= kh.so_tien_no:
+            if THAMSO.objects.all()[0].kiem_tra_so_tien_thu == True:
+                if phieuthutien.so_tien_thu <= kh.so_tien_no:
+                    kh.so_tien_no -= phieuthutien.so_tien_thu
+                    kh.save()
+                    phieuthutien.save()
+                    print("Create receipt successfully!")
+                else:
+                    print("The amount collected must not exceed the amount the customer owes!")
+                    print("Create receipt failed!")
+                    return redirect('create-receipt')
+            else:
                 kh.so_tien_no -= phieuthutien.so_tien_thu
                 kh.save()
                 phieuthutien.save()
                 print("Create receipt successfully!")
-            else:
-                print("The amount collected must not exceed the amount the customer owes!")
-                print("Create receipt failed!")
-                return redirect('create-receipt')
-  
+
             return redirect('bookstore')
 
         else:
@@ -414,3 +420,18 @@ def searchBills(request):
 
     context = {'bill_detail': bill_detail, 'bill': bill, 'search_query': search_query}
     return render(request, 'bookstore/search-bills.html', context)
+
+
+# Thay doi quy dinh
+def changeRules(request):
+    thamso = THAMSO.objects.all()[0]
+    form = ThamSoForm(instance=thamso)
+
+    if request.method == 'POST':
+        form = ThamSoForm(request.POST, instance=thamso)
+        if form.is_valid():
+            form.save()
+            return redirect('change-rules')
+
+    context = {'form': form}
+    return render(request, 'bookstore/change-rules.html', context)

@@ -11,4 +11,6 @@ urlpatterns = [
     path('create-books-bill/', views.createBooksBill, name="create-books-bill"),
     path('search-bills/', views.searchBills, name="search-bills"),
     path('input-payment/', views.inputPayment, name="input-payment"),
+
+    path('change-rules/', views.changeRules, name="change-rules"),
 ]
