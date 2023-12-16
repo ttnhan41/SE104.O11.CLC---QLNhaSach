@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create inventory report</title>
+    <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/create-inventory-report.css' %}" />
+  </head>
+
+  <body>
+    <nav>
+      {% include 'navbar.html' %}
+    </nav>
+   
+    <div id="input-box">
+      
+      <div class="input-data">
+        <a href="adminManageBooks.html">
+          <img class="arrow" src="{% static 'images/arrow.png' %}" >
+        </a>
+        <h2>Lập báo cáo tồn</h2>
+        
+        <form class="form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="grid-item">
+              <span>Mã sách:</span>
+              <span>{{bcton_form.ma_sach}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Tháng:</span>
+              <span>{{bcton_form.thang}}</span>
+            </div>
+            <div class="grid-item">
+              <span>Năm:</span>
+              <span>{{bcton_form.nam}}</span>
+            </div>
+            <div class="grid-item">
+              <span></span>
+              <span></span>
+            </div>
+            <div class="grid-item">
+              <input type="submit" value="Lập báo cáo">
+            </div>
+        
+        </form>
+      </div>
+
+    </div>
+  </body>
+</html> 

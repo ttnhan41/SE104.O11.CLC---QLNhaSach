@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Q
-from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien, HoaDon, CT_HD
-from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm, HoaDonForm, CTHDForm, ThamSoForm
+from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien, HoaDon, CT_HD, BC_TON
+from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm, HoaDonForm, CTHDForm, ThamSoForm, BCTONForm
 
-# Trang thong tin nha sach
+# Mo trang thong tin nha sach
 def bookstore(request):
     return render(request, 'bookstore/bookstore-info.html')
 
-# Trang thong tin chi tiet cua 1 sach
+# Mo trang thong tin chi tiet cua 1 sach
 def book(request, pk):
     return render(request, 'bookstore/single-book.html')
 
@@ -364,7 +364,7 @@ def inputPayment(request):
             hoadon = hoadon_form.save(commit=False)
             cthd = cthd_form.save(commit=False)
             
-            # Kiem tra ma hoa don
+            # Kiem tra ma hoa don da nhap hay chua?
             check_hoa_don = HoaDon.objects.filter(ma_hoa_don=cthd.ma_hoa_don_id).exists()
             if check_hoa_don:
                 hd = HoaDon.objects.get(ma_hoa_don=cthd.ma_hoa_don_id)
@@ -435,3 +435,87 @@ def changeRules(request):
 
     context = {'form': form}
     return render(request, 'bookstore/change-rules.html', context)
+
+
+def createInventoryReport(request):
+    if request.method == 'POST':
+        bcton_form = BCTONForm(request.POST, prefix = "bcton")
+        if bcton_form.is_valid():
+
+            bcton = bcton_form.save(commit=False)
+
+            # Kiem tra ma sach da nhap hay chua?
+            check_sach = Sach.objects.filter(ma_sach=bcton.ma_sach_id).exists()
+            if check_sach:
+                sach = Sach.objects.get(ma_sach=bcton.ma_sach_id)
+            else:
+                print("Please input book id")
+                print("Create inventory report failed!")
+                return redirect('create-inventory-report')
+
+            # Kiem tra ma sach, thang, nam da co trong table BC_TON hay chua?
+            check_sach = BC_TON.objects.filter(ma_sach=bcton.ma_sach_id).exists()
+            check_thang = BC_TON.objects.filter(thang=bcton.thang).exists()
+            check_nam = BC_TON.objects.filter(nam=bcton.nam).exists()
+            if check_sach == False or check_thang == False or check_nam == False:
+
+                ds_sach_nhap = CT_PNS.objects.filter(
+                    ma_phieu_nhap__ngay_nhap__month=bcton.thang,
+                    ma_phieu_nhap__ngay_nhap__year=bcton.nam,
+                    ma_sach=bcton.ma_sach_id
+                )
+
+                for book in ds_sach_nhap:
+                    bcton.phat_sinh += book.so_luong_nhap
+
+                ds_sach_ban = CT_HD.objects.filter(
+                    ma_hoa_don__ngay_lap__month=bcton.thang,
+                    ma_hoa_don__ngay_lap__year=bcton.nam,
+                    ma_sach=bcton.ma_sach_id
+                )
+
+                sl_sach_ban = 0
+                for book in ds_sach_ban:
+                    sl_sach_ban += book.so_luong_ban
+
+                bcton.ton_cuoi = sach.so_luong_ton
+                bcton.ton_dau = bcton.ton_cuoi - bcton.phat_sinh + sl_sach_ban
+
+                bcton.save()
+                print("Create inventory report successfully!")
+            else:
+                print("Already has!")
+                print("Create inventory report failed!")
+                return redirect('create-inventory-report')
+
+            return redirect('bookstore')
+
+        else:
+            print("Create inventory report failed!")
+
+    else:
+        bcton_form = BCTONForm(prefix = "bcton")
+
+    context = {
+        'bcton_form': bcton_form,
+    }
+    return render(request, 'bookstore/create-inventory-report.html', context)
+
+
+# Tra cuu bao cao ton
+def searchInventoryReport(request):
+    search_month = 0
+    search_year = 0
+
+    if request.GET.get('search_month'):
+        search_month = request.GET.get('search_month')
+    if request.GET.get('search_year'):
+        search_year = request.GET.get('search_year')
+    
+    report = BC_TON.objects.filter(
+        Q(thang__exact=search_month),
+        Q(nam__exact=search_year)
+    )
+
+    context = {'report': report, 'search_month': search_month, 'search_year': search_year}
+    return render(request, 'bookstore/search-inventory-report.html', context)

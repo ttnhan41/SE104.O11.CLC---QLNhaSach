@@ -33,11 +33,10 @@ h1 {
 }
 
 h2 {
-  margin: 0 0 10px 0;
+  margin: 0 0 20px 0;
   font-weight: 300;
-  font-size: 16px;
-  position: relative;
-  left: 30%;
+  font-size: 24px;
+  text-align: center;
 }
 
 nav ul {
@@ -71,38 +70,37 @@ nav li a:hover, nav li a:active {
 
 form {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
+  flex-direction: column;
+  gap: 30px;
   align-items: center;
   justify-content: center;
   margin-top: 45px;
   margin-bottom: 30px;
 }
 
-form label {
-  margin: 10px auto;
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  height: 50px;
 }
 
-.books-bill {
+.wrapper label {
+  margin: 10px;
+  padding-top: 7px;
+}
+
+.wrapper input[type="search"] {
+  margin: 10px;
+}
+
+.wrapper:first-child {
+  padding-right: 10px;
+}
+
+.report {
   position: relative;
   margin: 5% auto;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  margin: 20px 0px 20px 60px;
-}
-
-.grid-item-left {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 5px;
-  padding-right: 35px;
-}
-
-.grid-item-right {
-  padding-top: 5px;
 }
 
 .content-table {
@@ -139,7 +137,7 @@ form label {
 }
 
 input[type="submit"] {
-  width: 9%;
+  width: 100px;
   height: 40px;
   background: black;
   border: none;
@@ -150,8 +148,6 @@ input[type="submit"] {
   text-transform: uppercase;
   transition: 0.1s ease;
   cursor: pointer;
-  margin-left: 8%;
-  margin-right: 25%;
 }
 
 input[type="submit"]:hover,
@@ -173,8 +169,7 @@ input[type="search"] {
   margin-top: 13px;
   border: solid 1px black;
   font-size: 17px;
-  width: 20%;
-  position: absolute;
+  width: 100px;
 }
 
 input[type="search"]:focus {

@@ -21,22 +21,33 @@
             <input type="submit" value="Tìm kiếm">
         </form>
 
-        <div class="c-grid">
-            {% for guest in guests %}
-            <article class="c-grid__item">
-                <div class="c-grid__content">
-                    <p>
-                        Mã khách hàng: {{guest.ma_kh}}<br>
-                        Họ tên khách hàng: {{guest.hoten_kh}}<br>
-                        Địa chỉ: {{guest.dia_chi}}<br>
-                        Số điện thoại: {{guest.dien_thoai}}<br>
-                        Email: {{guest.email}}<br>
-                        Số tiền nợ: {{guest.so_tien_no}}
-                    </p>
-                </div>
-            </article>
-            {% endfor %}
-        </div>
+        <div class="guest-table">
+			<h1>Danh sách khách hàng</h1>
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th>Mã khách hàng</th>
+						<th>Họ tên khách hàng</th>
+						<th>Địa chỉ</th>
+						<th>Số điện thoại</th>
+						<th>Email</th>
+                        <th>Số tiền nợ</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for guest in guests %}
+					<tr>
+						<td>{{guest.ma_kh}}</td>
+						<td>{{guest.hoten_kh}}</td>
+						<td>{{guest.dia_chi}}</td>
+						<td>{{guest.dien_thoai}}</td>
+						<td>{{guest.email}}</td>
+                        <td>{{guest.so_tien_no}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 
     </body>
 </html>

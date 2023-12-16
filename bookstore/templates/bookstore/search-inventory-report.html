@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Inventory report search</title>
+		<link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+		<link rel="stylesheet" href="{% static 'styles/search-inventory-report.css' %}" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	</head>
+	<body>
+		<nav>
+			{% include 'navbar.html' %}   
+		</nav>
+
+		<form class="form" action="{% url 'search-inventory-report' %}" method="get">
+			<div class="wrapper">
+				<label for="month-search"><b>Nhập tháng</b>:</label>
+				<input type="search" id="month-search" name="search_month" value="{{search_month}}">
+			</div>
+			<div class="wrapper">
+				<label for="year-search"><b>Nhập năm</b>:</label>
+				<input type="search" id="year-search" name="search_year" value="{{search_year}}">
+			</div>
+			<div class="wrapper">
+				<input type="submit" value="Xem">
+			</div>
+		</form>
+
+		<div class="report">
+			<h1>Xem báo cáo tồn</h1>
+			<h2>{{search_month}}/{{search_year}}</h2>
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th>Mã sách</th>
+						<th>Tên sách</th>
+						<th>Tồn đầu</th>
+						<th>Phát sinh</th>
+						<th>Tồn cuối</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for detail in report %}
+					<tr>
+						<td>{{detail.ma_sach}}</td>
+						<td>{{detail.ma_sach.ma_dau_sach.ten_dau_sach}}</td>
+						<td>{{detail.ton_dau}}</td>
+						<td>{{detail.phat_sinh}}</td>
+						<td>{{detail.ton_cuoi}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
