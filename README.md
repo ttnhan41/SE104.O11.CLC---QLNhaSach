@@ -11,7 +11,8 @@
 * 2 - Clone repo https://github.com/ttnhan41/SE104.O11.CLC-QLNhaSach
 * 3 - pip install virtualenv
 * 4 - virtualenv venv
-* 5 - venv\Scripts\activate
-* 6 - cd SE104.O11.CLC-QLNhaSach
-* 7 - pip install -r requirements.txt
-* 8 - python manage.py runserver
+* 5 - Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+* 6 - venv\Scripts\activate
+* 7 - cd SE104.O11.CLC-QLNhaSach
+* 8 - pip install -r requirements.txt
+* 9 - python manage.py runserver
