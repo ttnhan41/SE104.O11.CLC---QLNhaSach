@@ -25,7 +25,7 @@ body {
   color: white;
   text-align: center;
   line-height: 70px;
-  background: #3d362d;
+  background: #222120;
   user-select: none;
 }
 
@@ -33,7 +33,7 @@ body {
   display: block;
   height: 100%;
   width: 100%;
-  line-height: 65px;
+  line-height: 55px;
   font-size: 20px;
   color: white;
   padding-left: 40px;
@@ -59,7 +59,7 @@ label #cancel {
 }
 
 label #btn {
-  left: 40px;
+  left: 160px;
   top: 57px;
   font-size: 35px;
   color: white;
@@ -92,7 +92,7 @@ label #cancel {
 }
 
 section {
-  background: url(https://images.unsplash.com/photo-1502485019198-a625bd53ceb7?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80)
+  background: url("../images/bookstore-bg.jpg")
     no-repeat;
   background-position: center;
   background-size: cover;
@@ -109,20 +109,22 @@ section {
   left: 26%;
   text-align: center;
   font-family: "Roboto", sans-serif;
-  font-size: 52px;
+  font-size: 40px;
   font-weight: 700;
   line-height: 57px;
-  color: #ffffff;
-  margin-top: 5%;
+  color: black;
+  margin-top: 12%;
 }
 
 .intro {
   position: absolute;
-  left: 24%;
+  left: 26%;
   font-family: "Roboto", sans-serif;
-  font-size: 40px;
-  font-weight: 200;
-  line-height: 50px;
-  color: #ffffff;
-  margin-top: 15%;
+  font-size: 20px;
+  font-weight: 300;
+  text-align: justify;
+  line-height: 2.5;
+  color: black;
+  margin-top: 18%;
+  margin-right: 10%;
 }

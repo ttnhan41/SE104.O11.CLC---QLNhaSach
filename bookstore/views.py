@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Q
-from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien, HoaDon, CT_HD, BC_TON
-from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm, HoaDonForm, CTHDForm, ThamSoForm, BCTONForm
+from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien, HoaDon, CT_HD, BC_TON, BC_CONGNO
+from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm, HoaDonForm, CTHDForm, ThamSoForm, BCTONForm, BCCNForm
 
 # Mo trang thong tin nha sach
 def bookstore(request):
@@ -437,6 +437,7 @@ def changeRules(request):
     return render(request, 'bookstore/change-rules.html', context)
 
 
+# Lap bao cao ton
 def createInventoryReport(request):
     if request.method == 'POST':
         bcton_form = BCTONForm(request.POST, prefix = "bcton")
@@ -450,6 +451,18 @@ def createInventoryReport(request):
                 sach = Sach.objects.get(ma_sach=bcton.ma_sach_id)
             else:
                 print("Please input book id")
+                print("Create inventory report failed!")
+                return redirect('create-inventory-report')
+
+            # Kiem tra thang da nhap hop le hay chua?
+            if bcton.thang == None or bcton.thang < 1 or bcton.thang > 12:
+                print("Please input a valid month")
+                print("Create inventory report failed!")
+                return redirect('create-inventory-report')
+
+            # Kiem tra nam da nhap hop le hay chua?
+            if bcton.nam == None or bcton.nam < 1:
+                print("Please input a valid year")
                 print("Create inventory report failed!")
                 return redirect('create-inventory-report')
 
@@ -519,3 +532,100 @@ def searchInventoryReport(request):
 
     context = {'report': report, 'search_month': search_month, 'search_year': search_year}
     return render(request, 'bookstore/search-inventory-report.html', context)
+
+
+# Lap bao cao cong no
+def createDebtReport(request):
+    if request.method == 'POST':
+        bccn_form = BCCNForm(request.POST, prefix = "bccn")
+        if bccn_form.is_valid():
+
+            bccn = bccn_form.save(commit=False)
+
+            # Kiem tra ma khach hang da nhap hay chua?
+            check_khach_hang = KhachHang.objects.filter(ma_kh=bccn.ma_kh_id).exists()
+            if check_khach_hang:
+                khachhang = KhachHang.objects.get(ma_kh=bccn.ma_kh_id)
+            else:
+                print("Please input guest id")
+                print("Create debt report failed!")
+                return redirect('create-debt-report')
+
+            # Kiem tra thang da nhap hop le hay chua?
+            if bccn.thang == None or bccn.thang < 1 or bccn.thang > 12:
+                print("Please input a valid month")
+                print("Create debt report failed!")
+                return redirect('create-debt-report')
+
+            # Kiem tra nam da nhap hop le hay chua?
+            if bccn.nam == None or bccn.nam < 1:
+                print("Please input a valid year")
+                print("Create debt report failed!")
+                return redirect('create-debt-report')
+            
+            # Kiem tra ma khach hang, thang, nam da co trong table BC_CONGNO hay chua?
+            check_khach_hang = BC_CONGNO.objects.filter(ma_kh=bccn.ma_kh_id).exists()
+            check_thang = BC_CONGNO.objects.filter(thang=bccn.thang).exists()
+            check_nam = BC_CONGNO.objects.filter(nam=bccn.nam).exists()
+            if check_khach_hang == False or check_thang == False or check_nam == False:
+
+                ds_kh_no = HoaDon.objects.filter(
+                    ngay_lap__month=bccn.thang,
+                    ngay_lap__year=bccn.nam,
+                    ma_kh=bccn.ma_kh_id
+                )
+
+                for guest in ds_kh_no:
+                    bccn.phat_sinh -= guest.con_lai
+
+                ds_kh_tra_no = PhieuThuTien.objects.filter(
+                    ngay_thu_tien__month=bccn.thang,
+                    ngay_thu_tien__year=bccn.nam,
+                    ma_kh=bccn.ma_kh_id
+                )
+
+                tong_so_tien_kh_tra_no = 0
+                for guest in ds_kh_tra_no:
+                    tong_so_tien_kh_tra_no += guest.so_tien_thu
+
+                bccn.no_cuoi = khachhang.so_tien_no
+                bccn.no_dau = bccn.no_cuoi - bccn.phat_sinh + tong_so_tien_kh_tra_no
+            
+                bccn.save()
+                print("Create debt report successfully!")
+            else:
+                print("Already has!")
+                print("Create debt report failed!")
+                return redirect('create-debt-report')
+            
+            return redirect('bookstore')
+
+        else:
+            print("Create debt report failed!")
+
+    else:
+        bccn_form = BCCNForm(prefix = "bccn")
+
+    context = {
+        'bccn_form': bccn_form,
+    }
+    return render(request, 'bookstore/create-debt-report.html', context)
+
+
+# Tra cuu bao cao cong no
+def searchDebtReport(request):
+    search_month = 0
+    search_year = 0
+
+    if request.GET.get('search_month'):
+        search_month = request.GET.get('search_month')
+    if request.GET.get('search_year'):
+        search_year = request.GET.get('search_year')
+    
+    report = BC_CONGNO.objects.filter(
+        Q(thang__exact=search_month),
+        Q(nam__exact=search_year)
+    )
+
+    context = {'report': report, 'search_month': search_month, 'search_year': search_year}
+    return render(request, 'bookstore/search-debt-report.html', context)

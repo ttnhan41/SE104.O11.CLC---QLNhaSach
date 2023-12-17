@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Debt report search</title>
+		<link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+		<link rel="stylesheet" href="{% static 'styles/search-debt-report.css' %}" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	</head>
+	<body>
+		<nav>
+			{% include 'navbar.html' %}   
+		</nav>
+
+		<form class="form" action="{% url 'search-debt-report' %}" method="get">
+			<div class="wrapper">
+				<label for="month-search"><b>Nhập tháng</b>:</label>
+				<input type="search" id="month-search" name="search_month" value="{{search_month}}">
+			</div>
+			<div class="wrapper">
+				<label for="year-search"><b>Nhập năm</b>:</label>
+				<input type="search" id="year-search" name="search_year" value="{{search_year}}">
+			</div>
+			<div class="wrapper">
+				<input type="submit" value="Xem">
+			</div>
+		</form>
+
+		<div class="report">
+			<h1>Xem báo cáo công nợ</h1>
+			<h2>{{search_month}}/{{search_year}}</h2>
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th>Mã khách hàng</th>
+						<th>Tên khách hàng</th>
+						<th>Nợ đầu</th>
+						<th>Phát sinh</th>
+						<th>Nợ cuối</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for detail in report %}
+					<tr>
+						<td>{{detail.ma_kh}}</td>
+						<td>{{detail.ma_kh.hoten_kh}}</td>
+						<td>{{detail.no_dau}}</td>
+						<td>{{detail.phat_sinh}}</td>
+						<td>{{detail.no_cuoi}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

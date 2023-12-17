@@ -1,16 +1,17 @@
 {% load static %}
 
 <ul>
-    <li><a href="/">Trang chủ</a></li>
+    <li><a href="{% url 'bookstore' %}">Trang chủ</a></li>
     <li><a href="{% url 'import-book' %}">Lập phiếu nhập sách</a></li>
     <li><a href="{% url 'create-books-bill' %}">Lập hóa đơn bán sách</a></li>
     <li><a href="{% url 'create-receipt' %}">Lập phiếu thu tiền</a></li>
     <li><a href="{% url 'create-inventory-report' %}">Lập báo cáo tồn</a></li>
+    <li><a href="{% url 'create-debt-report' %}">Lập báo cáo công nợ</a></li>
     <li><a href="{% url 'search-books' %}">Tra cứu sách</a></li>
     <li><a href="{% url 'search-guests' %}">Tra cứu khách hàng</a></li>
     <li><a href="{% url 'search-bills' %}">Xem hóa đơn</a></li>
     <li><a href="{% url 'search-inventory-report' %}">Xem báo cáo tồn</a></li>
-
+    <li><a href="{% url 'search-debt-report' %}">Xem báo cáo công nợ</a></li>
     <li><a href="{% url 'change-rules' %}">Thay đổi quy định</a></li>
     <!-- <button class="joinbtn" onclick="mainApp.logOut()">LOG OUT</button> -->
 

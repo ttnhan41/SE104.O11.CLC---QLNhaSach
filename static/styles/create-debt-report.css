@@ -47,7 +47,7 @@ nav li a:hover, nav li a:active {
   position: relative;
   margin: 120px auto 0px auto;
   width: 850px;
-  height: 510px;
+  height: 240px;
   border: black;
   background: white;
   border-radius: 20px;
@@ -62,7 +62,7 @@ nav li a:hover, nav li a:active {
 
 form {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 15px;
   margin: 5px;
 }
@@ -70,6 +70,8 @@ form {
 .grid-item {
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 10px;
 }
 
 .grid-item span {
@@ -77,6 +79,10 @@ form {
 }
 
 .grid-item span:first-child {
+  width: 80px;
+}
+
+.grid-item:nth-of-type(1) span:first-child {
   width: 120px;
 }
 
@@ -88,7 +94,7 @@ h1, h2 {
   font-size: 28px;
   font-family: sans-serif;
   font-weight: bold;
-  padding: 15px 0px;
+  padding: 15px 0px 25px 0px;
   text-align: center;
 }
 
@@ -112,7 +118,7 @@ input[type="text"]:focus {
 }
 
 input[type="number"] {
-  width: 100px;
+  width: 60px;
 }
 
 input[type="submit"] {

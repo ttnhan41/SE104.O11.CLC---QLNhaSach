@@ -13,6 +13,7 @@ urlpatterns = [
     path('input-payment/', views.inputPayment, name="input-payment"),
     path('create-inventory-report/', views.createInventoryReport, name="create-inventory-report"),
     path('search-inventory-report/', views.searchInventoryReport, name="search-inventory-report"),
-
+    path('create-debt-report/', views.createDebtReport, name="create-debt-report"),
+    path('search-debt-report/', views.searchDebtReport, name="search-debt-report"),
     path('change-rules/', views.changeRules, name="change-rules"),
 ]

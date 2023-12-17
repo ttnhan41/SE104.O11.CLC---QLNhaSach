@@ -4,9 +4,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create inventory report</title>
+    <title>Create debt report</title>
     <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
-    <link rel="stylesheet" href="{% static 'styles/create-inventory-report.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/create-debt-report.css' %}" />
   </head>
 
   <body>
@@ -20,22 +20,22 @@
         <a href="{% url 'bookstore' %}">
           <img class="arrow" src="{% static 'images/arrow.png' %}" >
         </a>
-        <h2>Lập báo cáo tồn</h2>
+        <h2>Lập báo cáo công nợ</h2>
         
         <form class="form" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             
             <div class="grid-item">
-              <span>Mã sách:</span>
-              <span>{{bcton_form.ma_sach}}</span>
+              <span>Mã khách hàng:</span>
+              <span>{{bccn_form.ma_kh}}</span>
             </div>
             <div class="grid-item">
               <span>Tháng:</span>
-              <span>{{bcton_form.thang}}</span>
+              <span>{{bccn_form.thang}}</span>
             </div>
             <div class="grid-item">
               <span>Năm:</span>
-              <span>{{bcton_form.nam}}</span>
+              <span>{{bccn_form.nam}}</span>
             </div>
             <div class="grid-item">
               <span></span>
