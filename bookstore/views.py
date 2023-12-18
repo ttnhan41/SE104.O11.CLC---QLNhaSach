@@ -119,9 +119,8 @@ def importBook(request):
                 phieunhapsach = phieunhapsach_form.save()
             
             # Kiem tra ma phieu nhap va ma sach da co trong table CT_PNS hay chua?
-            check_phieu_nhap_sach = CT_PNS.objects.filter(ma_phieu_nhap=phieunhapsach.ma_phieu_nhap).exists()
-            check_sach = CT_PNS.objects.filter(ma_sach=sach.ma_sach).exists()
-            if check_phieu_nhap_sach == False or check_sach == False:
+            check_ctpns = CT_PNS.objects.filter(ma_phieu_nhap=phieunhapsach.ma_phieu_nhap, ma_sach=sach.ma_sach).exists()
+            if check_ctpns == False:
                 ma_phieu_nhap = PhieuNhapSach.objects.get(ma_phieu_nhap=phieunhapsach.ma_phieu_nhap)
                 ma_sach = Sach.objects.get(ma_sach=sach.ma_sach)
                 ctpns = CT_PNS(
@@ -299,9 +298,8 @@ def createBooksBill(request):
                 hoadon.save()
 
             # Kiem tra ma hoa don va ma sach da co trong table CT_HD hay chua?
-            check_hoa_don = CT_HD.objects.filter(ma_hoa_don=hoadon.ma_hoa_don).exists()
-            check_sach = CT_HD.objects.filter(ma_sach=cthd.ma_sach_id).exists()
-            if check_hoa_don == False or check_sach == False:
+            check_cthd = CT_HD.objects.filter(ma_hoa_don=hoadon.ma_hoa_don, ma_sach=cthd.ma_sach_id).exists()
+            if check_cthd == False:
                 ma_hoa_don = HoaDon.objects.get(ma_hoa_don=hoadon.ma_hoa_don)
                 ma_sach = Sach.objects.get(ma_sach=cthd.ma_sach_id)
                 cthd = CT_HD(
@@ -422,6 +420,26 @@ def searchBills(request):
     return render(request, 'bookstore/search-bills.html', context)
 
 
+# Tra cuu phieu nhap sach
+def searchImportNotes(request):
+    search_query = 0
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    
+    note_detail = CT_PNS.objects.filter(
+        Q(ma_phieu_nhap__exact=search_query)
+    )
+    
+    if search_query != 0 and PhieuNhapSach.objects.filter(ma_phieu_nhap=search_query).count() != 0:
+        note = PhieuNhapSach.objects.get(ma_phieu_nhap=search_query)
+    else:
+        note = PhieuNhapSach.objects.filter(ma_phieu_nhap=search_query)
+
+    context = {'note_detail': note_detail, 'note': note, 'search_query': search_query}
+    return render(request, 'bookstore/search-import-notes.html', context)
+
+
 # Thay doi quy dinh
 def changeRules(request):
     thamso = THAMSO.objects.all()[0]
@@ -467,10 +485,8 @@ def createInventoryReport(request):
                 return redirect('create-inventory-report')
 
             # Kiem tra ma sach, thang, nam da co trong table BC_TON hay chua?
-            check_sach = BC_TON.objects.filter(ma_sach=bcton.ma_sach_id).exists()
-            check_thang = BC_TON.objects.filter(thang=bcton.thang).exists()
-            check_nam = BC_TON.objects.filter(nam=bcton.nam).exists()
-            if check_sach == False or check_thang == False or check_nam == False:
+            check_bcton = BC_TON.objects.filter(ma_sach=bcton.ma_sach_id, thang=bcton.thang, nam=bcton.nam).exists()
+            if check_bcton == False:
 
                 ds_sach_nhap = CT_PNS.objects.filter(
                     ma_phieu_nhap__ngay_nhap__month=bcton.thang,
@@ -564,10 +580,8 @@ def createDebtReport(request):
                 return redirect('create-debt-report')
             
             # Kiem tra ma khach hang, thang, nam da co trong table BC_CONGNO hay chua?
-            check_khach_hang = BC_CONGNO.objects.filter(ma_kh=bccn.ma_kh_id).exists()
-            check_thang = BC_CONGNO.objects.filter(thang=bccn.thang).exists()
-            check_nam = BC_CONGNO.objects.filter(nam=bccn.nam).exists()
-            if check_khach_hang == False or check_thang == False or check_nam == False:
+            check_bccn = BC_CONGNO.objects.filter(ma_kh=bccn.ma_kh_id, thang=bccn.thang, nam=bccn.nam).exists()
+            if check_bccn == False:
 
                 ds_kh_no = HoaDon.objects.filter(
                     ngay_lap__month=bccn.thang,
