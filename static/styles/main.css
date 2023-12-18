@@ -33,7 +33,7 @@ body {
   display: block;
   height: 100%;
   width: 100%;
-  line-height: 50px;
+  line-height: 46px;
   font-size: 20px;
   color: white;
   padding-left: 40px;
@@ -92,8 +92,7 @@ label #cancel {
 }
 
 section {
-  background: url("../images/bookstore-bg.jpg")
-    no-repeat;
+  background: url("../images/bookstore-bg.jpg") no-repeat;
   background-position: center;
   background-size: cover;
   height: 100vh;

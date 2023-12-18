@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Author search</title>
+        <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/search-authors.css' %}" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+
+    <body>
+        <nav>
+            {% include 'navbar.html' %}
+        </nav>
+
+        <form class="form" action="{% url 'search-authors' %}" method="get">
+            <label for="authors-search"><b>Tra cứu tác giả</b>:</label>
+            <input type="search" id="authors-search" name="search_query" value="{{search_query}}">
+            <input type="submit" value="Tìm kiếm">
+        </form>
+
+        <div class="author-table">
+			<h1>Danh sách tác giả</h1>
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th>Mã tác giả</th>
+						<th>Tên tác giả</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for author in authors %}
+					<tr>
+						<td>{{author.ma_tac_gia}}</td>
+						<td>{{author.ten_tac_gia}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+    </body>
+</html>

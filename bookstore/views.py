@@ -241,6 +241,22 @@ def searchBooks(request):
     return render(request, 'bookstore/search-books.html', context)
 
 
+# Tra cuu tac gia
+def searchAuthors(request):
+    search_query = ''
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    
+    authors = TacGia.objects.filter(
+        Q(ma_tac_gia__icontains=search_query) | 
+        Q(ten_tac_gia__icontains=search_query)
+    )
+
+    context = {'authors': authors, 'search_query': search_query}
+    return render(request, 'bookstore/search-authors.html', context)
+
+
 # Tra cuu khach hang
 def searchGuests(request):
     search_query = ''

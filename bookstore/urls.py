@@ -8,6 +8,7 @@ urlpatterns = [
     path('search-import-notes/', views.searchImportNotes, name="search-import-notes"),
     path('create-receipt/', views.createReceipt, name="create-receipt"),
     path('search-books/', views.searchBooks, name="search-books"),
+    path('search-authors/', views.searchAuthors, name="search-authors"),
     path('search-guests/', views.searchGuests, name="search-guests"),
     path('create-books-bill/', views.createBooksBill, name="create-books-bill"),
     path('search-bills/', views.searchBills, name="search-bills"),
