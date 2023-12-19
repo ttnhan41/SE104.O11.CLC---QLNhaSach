@@ -25,7 +25,7 @@
             {% for book in books %}
             <article class="c-grid__item">
                 <div class="c-grid__picture" style="width: 150px; height: 200px;">
-                    <img src="{{book.hinh_anh.url}}" style="max-width: 70%;">
+                    <img src="{{book.hinh_anh.url}}" style="max-width: 75%;">
                 </div>
                 <div class="c-grid__content">
                     <p>
@@ -33,6 +33,7 @@
                         Tác giả: {{book.tac_gia}}<br>
                         Mã sách: {{book.ma_sach}}<br>
                         Mã đầu sách: {{book.ma_dau_sach}}<br>
+                        Mã thể loại: {{book.ma_dau_sach.ma_the_loai}}<br>
                         Thể loại: {{book.ma_dau_sach.ma_the_loai.ten_the_loai}}<br>
                         Nhà xuất bản: {{book.nha_xuat_ban}}<br>
                         Năm xuất bản: {{book.nam_xuat_ban}}<br>

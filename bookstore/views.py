@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien, HoaDon, CT_HD, BC_TON, BC_CONGNO
 from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm, HoaDonForm, CTHDForm, ThamSoForm, BCTONForm, BCCNForm
@@ -9,10 +10,12 @@ def bookstore(request):
     return render(request, 'bookstore/bookstore-info.html')
 
 # Mo trang thong tin chi tiet cua 1 sach
+@login_required(login_url="login")
 def book(request, pk):
     return render(request, 'bookstore/single-book.html')
 
 # Lap phieu nhap sach
+@login_required(login_url="login")
 def importBook(request):
     if request.method == 'POST':
         theloai_form = TheLoaiForm(request.POST, prefix = "theloai")
@@ -165,6 +168,7 @@ def importBook(request):
 
 
 # Lap phieu thu tien
+@login_required(login_url="login")
 def createReceipt(request):
     if request.method == 'POST':
         khachhang_form = KhachHangForm(request.POST, prefix = "khachhang")
@@ -220,6 +224,7 @@ def createReceipt(request):
 
 
 # Tra cuu sach
+@login_required(login_url="login")
 def searchBooks(request):
     search_query = ''
 
@@ -242,6 +247,7 @@ def searchBooks(request):
 
 
 # Tra cuu tac gia
+@login_required(login_url="login")
 def searchAuthors(request):
     search_query = ''
 
@@ -258,6 +264,7 @@ def searchAuthors(request):
 
 
 # Tra cuu khach hang
+@login_required(login_url="login")
 def searchGuests(request):
     search_query = ''
 
@@ -278,6 +285,7 @@ def searchGuests(request):
 
 
 # Lap hoa don ban sach
+@login_required(login_url="login")
 def createBooksBill(request):
     if request.method == 'POST':
         khachhang_form = KhachHangForm(request.POST, prefix = "khachhang")
@@ -368,6 +376,7 @@ def createBooksBill(request):
 
 
 # Nhap so tien tra
+@login_required(login_url="login")
 def inputPayment(request):
     if request.method == 'POST':
         hoadon_form = HoaDonForm(request.POST, prefix = "hoadon")
@@ -417,6 +426,7 @@ def inputPayment(request):
 
 
 # Tra cuu hoa don
+@login_required(login_url="login")
 def searchBills(request):
     search_query = 0
 
@@ -437,6 +447,7 @@ def searchBills(request):
 
 
 # Tra cuu phieu nhap sach
+@login_required(login_url="login")
 def searchImportNotes(request):
     search_query = 0
 
@@ -457,6 +468,7 @@ def searchImportNotes(request):
 
 
 # Thay doi quy dinh
+@login_required(login_url="login")
 def changeRules(request):
     thamso = THAMSO.objects.all()[0]
     form = ThamSoForm(instance=thamso)
@@ -472,6 +484,7 @@ def changeRules(request):
 
 
 # Lap bao cao ton
+@login_required(login_url="login")
 def createInventoryReport(request):
     if request.method == 'POST':
         bcton_form = BCTONForm(request.POST, prefix = "bcton")
@@ -548,6 +561,7 @@ def createInventoryReport(request):
 
 
 # Tra cuu bao cao ton
+@login_required(login_url="login")
 def searchInventoryReport(request):
     search_month = 0
     search_year = 0
@@ -567,6 +581,7 @@ def searchInventoryReport(request):
 
 
 # Lap bao cao cong no
+@login_required(login_url="login")
 def createDebtReport(request):
     if request.method == 'POST':
         bccn_form = BCCNForm(request.POST, prefix = "bccn")
@@ -643,6 +658,7 @@ def createDebtReport(request):
 
 
 # Tra cuu bao cao cong no
+@login_required(login_url="login")
 def searchDebtReport(request):
     search_month = 0
     search_year = 0

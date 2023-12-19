@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/login.css' %}" />
+  </head>
+  <body>
+    <nav>
+      {% include 'navbar.html' %}  
+    </nav> 
+    
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div id="input-box">   
+      <div class="input-data">
+        <a href="{% url 'bookstore' %}">
+          <img class="arrow" src="{% static 'images/arrow.png' %}" >
+        </a>
+        <h2>Đăng nhập</h2>
+        
+        <form action="{% url 'login' %}" method="POST">
+          {% csrf_token %}
+
+          <span>Tên người dùng:</span>
+          <input type="text" name="username" placeholder="Nhập tên người dùng" />
+          <span>Mật khẩu:</span>
+          <input type="password" name="password" placeholder="Nhập mật khẩu" />
+          <input type="submit" name="Login" value="Đăng nhập" />
+        </form> 
+      </div>
+    </div>
+
+  </body>
+</html>
