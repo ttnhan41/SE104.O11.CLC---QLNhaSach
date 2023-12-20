@@ -5,6 +5,7 @@
 * 21520677 - Lâm Phạm Vĩnh Đan
 * 21521029 - Tô Quốc Kiện
 * 21520692 - Đào Tiến Đạt
+* 21522557 - Trần Thanh Sơn
 
 # Installation:
 ### Lưu ý nên chạy cmd dưới quyền admin 
