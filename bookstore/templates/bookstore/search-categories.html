@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Category search</title>
+        <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/search-categories.css' %}" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+
+    <body>
+        <nav>
+            {% include 'navbar.html' %}
+        </nav>
+
+        <form class="form" action="{% url 'search-categories' %}" method="get">
+            <label for="categories-search"><b>Tra cứu thể loại</b>:</label>
+            <input type="search" id="categories-search" name="search_query" value="{{search_query}}">
+            <input type="submit" value="Tìm kiếm">
+        </form>
+
+        <div class="category-table">
+			<h1>Danh sách thể loại</h1>
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th>Mã thể loại</th>
+						<th>Tên thể loại</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for category in categories %}
+					<tr>
+						<td>{{category.ma_the_loai}}</td>
+						<td>{{category.ten_the_loai}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+    </body>
+</html>

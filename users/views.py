@@ -18,7 +18,7 @@ def loginUser(request):
         try:
             user = User.objects.get(username=username)
         except:
-            messages.error(request, 'Username does not exists')
+            messages.error(request, 'Tên người dùng không tồn tại')
 
         user = authenticate(request, username=username, password=password)
 
@@ -26,7 +26,7 @@ def loginUser(request):
             login(request, user)
             return redirect('bookstore')
         else:
-            messages.error(request, 'Username or password is incorrect')
+            messages.error(request, 'Tên người dùng hoặc mật khẩu không đúng')
 
     return render(request, 'users/login.html')
 
@@ -34,7 +34,7 @@ def loginUser(request):
 # Dang xuat
 def logoutUser(request):
     logout(request)
-    messages.success(request, 'User was logged out!')
+    messages.success(request, 'Đăng xuất thành công')
     return redirect('login')
 
 

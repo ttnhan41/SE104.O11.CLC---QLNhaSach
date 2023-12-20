@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db.models import Q
 from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien, HoaDon, CT_HD, BC_TON, BC_CONGNO
 from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm, HoaDonForm, CTHDForm, ThamSoForm, BCTONForm, BCCNForm
@@ -35,10 +36,6 @@ def importBook(request):
             phieunhapsach = phieunhapsach_form.save(commit=False)
             ctpns = ctpns_form.save(commit=False)
 
-            if ctpns.so_luong_nhap < THAMSO.objects.all()[0].sl_nhap_toi_thieu:
-                print("The number of books imported must be at least 150!")
-                print("Import book failed!")
-                return redirect('import-book')
             
             # Kiem tra ma the loai da co trong table TheLoai hay chua?
             check_the_loai = TheLoai.objects.filter(ma_the_loai=dausach.ma_the_loai_id).exists()
@@ -60,6 +57,9 @@ def importBook(request):
                         ma_the_loai=ma_the_loai
                     )
                     dausach.save()
+                else:
+                    messages.error(request, 'Vui lòng nhập mã đầu sách (nếu chưa có thì vui lòng nhập tên đầu sách)')
+                    return redirect('import-book')
             
             # Kiem tra ma tac gia da co trong table TacGia hay chua?
             check_tac_gia = TacGia.objects.filter(ma_tac_gia=cttg.ma_tac_gia_id).exists()
@@ -68,11 +68,13 @@ def importBook(request):
             else:
                 if tacgia.ten_tac_gia != None:
                     tacgia = tacgia_form.save()
+                else:
+                    messages.error(request, 'Vui lòng nhập mã tác giả (nếu chưa có thì vui lòng nhập tên tác giả)')
+                    return redirect('import-book')
             
             # Kiem tra ma tac gia va ma dau sach da co trong table CT_TACGIA hay chua?
-            check_tac_gia = CT_TACGIA.objects.filter(ma_tac_gia=tacgia.ma_tac_gia).exists()
-            check_dau_sach = CT_TACGIA.objects.filter(ma_dau_sach=dausach.ma_dau_sach).exists()
-            if check_tac_gia == False or check_dau_sach == False:
+            check_cttg = CT_TACGIA.objects.filter(ma_tac_gia=tacgia.ma_tac_gia, ma_dau_sach=dausach.ma_dau_sach).exists()
+            if check_cttg == False:
                 ma_tac_gia = TacGia.objects.get(ma_tac_gia=tacgia.ma_tac_gia)
                 ma_dau_sach = DauSach.objects.get(ma_dau_sach=dausach.ma_dau_sach)
                 cttg = CT_TACGIA(
@@ -80,10 +82,6 @@ def importBook(request):
                     ma_tac_gia=ma_tac_gia
                 )
                 cttg.save()
-            else:
-                check_cttg = CT_TACGIA.objects.filter(ma_tac_gia=cttg.ma_tac_gia_id, ma_dau_sach=cttg.ma_dau_sach_id).exists()
-                if check_cttg == False:
-                    cttg.save()
             
             # Kiem tra ma sach da co trong table Sach hay chua?
             check_sach = Sach.objects.filter(ma_sach=ctpns.ma_sach_id).exists()
@@ -94,14 +92,13 @@ def importBook(request):
                     ma_dau_sach = DauSach.objects.get(ma_dau_sach=dausach.ma_dau_sach)
                     sach.ma_dau_sach = ma_dau_sach 
                     sach.save()
+                else:
+                    messages.error(request, 'Vui lòng nhập mã sách (nếu chưa có thì vui lòng nhập thông tin nhà xuất bản và năm xuất bản)')
+                    return redirect('import-book')
             
-            if sach.so_luong_ton > THAMSO.objects.all()[0].sl_ton_toi_da:
-                print("Only import books which are fewer than 300!")
-                print("Import book failed!")
-                return redirect('import-book')
 
             # Cap nhat tac gia cho sach
-            sach = Sach.objects.get(ma_sach=sach.ma_sach, ma_dau_sach=dausach.ma_dau_sach)
+            # sach = Sach.objects.get(ma_sach=sach.ma_sach, ma_dau_sach=dausach.ma_dau_sach)
             ds_tacgia = CT_TACGIA.objects.filter(ma_dau_sach=dausach.ma_dau_sach)
             tacgia_info = []
             for tacgia in ds_tacgia:
@@ -113,6 +110,19 @@ def importBook(request):
             
             sach.tac_gia = ", ".join(tacgia_list)
             sach.save()
+            messages.success(request, 'Cập nhật thông tin tác giả cho sách thành công')
+
+            if ctpns.so_luong_nhap == 0:
+                return redirect('import-book')
+
+            # Kiem tra quy dinh
+            if ctpns.so_luong_nhap < THAMSO.objects.all()[0].sl_nhap_toi_thieu:
+                messages.error(request, 'Số lượng nhập phải ít nhất là ' + str(THAMSO.objects.all()[0].sl_nhap_toi_thieu))
+                return redirect('import-book')
+
+            if sach.so_luong_ton > THAMSO.objects.all()[0].sl_ton_toi_da:
+                messages.error(request, 'Chỉ nhập các sách có số lượng tồn ít hơn ' + str(THAMSO.objects.all()[0].sl_ton_toi_da + 1))
+                return redirect('import-book')
 
             # Kiem tra ma phieu nhap da co trong table PhieuNhapSach hay chua?
             check_phieu_nhap_sach = PhieuNhapSach.objects.filter(ma_phieu_nhap=ctpns.ma_phieu_nhap_id).exists()
@@ -141,11 +151,13 @@ def importBook(request):
                 phieunhapsach = PhieuNhapSach.objects.get(ma_phieu_nhap=ctpns.ma_phieu_nhap_id)
                 phieunhapsach.tong_tien += ctpns.thanh_tien
                 phieunhapsach.save()
-                print("Import book successfully!")
-            
-            return redirect('bookstore')
+                messages.success(request, 'Lập phiếu thành công')
+                return redirect('import-book')
+            else:
+                messages.error(request, 'Sách đã có trong phiếu nhập sách')
+                return redirect('import-book')
         else:
-            print("Import book failed!")
+            messages.error(request, 'Biểu mẫu vừa nhập chưa hợp lệ')
     else:
         theloai_form = TheLoaiForm(prefix = "theloai")
         tacgia_form = TacGiaForm(prefix = "tacgia")
@@ -185,6 +197,9 @@ def createReceipt(request):
             else:
                 if khachhang.hoten_kh != None:
                     khachhang = khachhang_form.save()
+                else:
+                    messages.error(request, 'Vui lòng nhập mã khách hàng (nếu chưa có thì vui lòng nhập họ tên khách hàng, địa chỉ, số điện thoại, email)')
+                    return redirect('create-receipt')
 
             phieuthutien = PhieuThuTien(
                 ma_kh=khachhang,
@@ -196,21 +211,20 @@ def createReceipt(request):
                     kh.so_tien_no -= phieuthutien.so_tien_thu
                     kh.save()
                     phieuthutien.save()
-                    print("Create receipt successfully!")
+                    messages.success(request, 'Lập phiếu thành công')
+                    return redirect('create-receipt')
                 else:
-                    print("The amount collected must not exceed the amount the customer owes!")
-                    print("Create receipt failed!")
+                    messages.error(request, 'Số tiền thu không vượt quá số tiền khách hàng đang nợ')
                     return redirect('create-receipt')
             else:
                 kh.so_tien_no -= phieuthutien.so_tien_thu
                 kh.save()
                 phieuthutien.save()
-                print("Create receipt successfully!")
-
-            return redirect('bookstore')
+                messages.success(request, 'Lập phiếu thành công')
+                return redirect('create-receipt')
 
         else:
-            print("Create receipt failed!")
+            messages.error(request, 'Biểu mẫu vừa nhập chưa hợp lệ')
 
     else:
         khachhang_form = KhachHangForm(prefix = "khachhang")
@@ -263,6 +277,23 @@ def searchAuthors(request):
     return render(request, 'bookstore/search-authors.html', context)
 
 
+# Tra cuu the loai
+@login_required(login_url="login")
+def searchCategories(request):
+    search_query = ''
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    
+    categories = TheLoai.objects.filter(
+        Q(ma_the_loai__icontains=search_query) | 
+        Q(ten_the_loai__icontains=search_query)
+    )
+
+    context = {'categories': categories, 'search_query': search_query}
+    return render(request, 'bookstore/search-categories.html', context)
+
+
 # Tra cuu khach hang
 @login_required(login_url="login")
 def searchGuests(request):
@@ -303,12 +334,25 @@ def createBooksBill(request):
             if check_khach_hang:
                 khachhang = KhachHang.objects.get(ma_kh=hoadon.ma_kh_id)
                 if khachhang.so_tien_no > THAMSO.objects.all()[0].so_tien_no_toi_da:
-                    print("This guest's debt is over 1000000 VND")
-                    print("Create books bill failed!")
+                    messages.error(request, 'Khách hàng nợ quá 1.000.000đ')
                     return redirect('create-books-bill')
             else:
                 if khachhang.hoten_kh != None:
                     khachhang = khachhang_form.save()
+                else:
+                    messages.error(request, 'Vui lòng nhập mã khách hàng (nếu chưa có thì vui lòng nhập họ tên khách hàng)')
+                    return redirect('create-books-bill')
+
+            # Kiem tra ma sach da nhap hay chua?
+            check_sach = Sach.objects.filter(ma_sach=cthd.ma_sach_id).exists()
+            if check_sach == False:
+                messages.error(request, 'Vui lòng nhập mã sách')
+                return redirect('create-books-bill')
+
+            # Kiem tra so luong ban hop le hay chua?
+            if cthd.so_luong_ban <= 0:
+                messages.error(request, 'Số lượng bán phải lớn hơn 0, vui lòng nhập lại số lượng bán')
+                return redirect('create-books-bill')
 
             # Kiem tra ma hoa don da co trong table HoaDon hay chua?
             check_hoa_don = HoaDon.objects.filter(ma_hoa_don=cthd.ma_hoa_don_id).exists()
@@ -342,13 +386,11 @@ def createBooksBill(request):
 
                 tong_sl_sach_cua_ds -= cthd.so_luong_ban
                 if tong_sl_sach_cua_ds < THAMSO.objects.all()[0].sl_ton_toi_thieu_sau_ban:
-                    print("The number of books after selling must be at least 20!")
-                    print("Create books bill failed!")
+                    messages.error(request, 'Đầu sách có lượng tồn sau khi bán phải ít nhất là ' + str(THAMSO.objects.all()[0].sl_ton_toi_thieu_sau_ban))
                     return redirect('create-books-bill')
                 
                 if (sach.so_luong_ton < cthd.so_luong_ban):
-                    print("The number of books selling must not be bigger than the number of books stored")
-                    print("Create books bill failed!")
+                    messages.error(request, 'Số lượng bán không được vượt quá số lượng tồn của sách')
                     return redirect('create-books-bill')
 
                 sach.so_luong_ton -= cthd.so_luong_ban
@@ -357,11 +399,14 @@ def createBooksBill(request):
                 hoadon = HoaDon.objects.get(ma_hoa_don=cthd.ma_hoa_don_id)
                 hoadon.tong_tien += cthd.thanh_tien
                 hoadon.save()
-                print("Create books bill successfully!")
-
-            return redirect('bookstore')
+                messages.success(request, 'Lập hóa đơn thành công')
+                return redirect('create-books-bill')
+            else:
+                messages.error(request, 'Sách đã có trong hóa đơn')
+                return redirect('create-books-bill')
+            
         else:
-            print("Create books bill failed!")
+            messages.error(request, 'Biểu mẫu vừa nhập chưa hợp lệ')
     else:
         khachhang_form = KhachHangForm(prefix = "khachhang")
         hoadon_form = HoaDonForm(prefix = "hoadon")
@@ -392,8 +437,7 @@ def inputPayment(request):
             if check_hoa_don:
                 hd = HoaDon.objects.get(ma_hoa_don=cthd.ma_hoa_don_id)
             else:
-                print("Please input bill id")
-                print("Input payment failed!")
+                messages.error(request, 'Mã hóa đơn chưa nhập')
                 return redirect('input-payment')
 
             hd.so_tien_tra = hoadon.so_tien_tra
@@ -401,19 +445,20 @@ def inputPayment(request):
             if hd.so_tien_tra >= hd.tong_tien:
                 hd.con_lai = hd.so_tien_tra - hd.tong_tien
                 hd.save()
-                print("Input payment successfully!")
+                messages.success(request, 'Nhập số tiền trả cho hóa đơn thành công')
+                return redirect('input-payment')
             else:
                 hd.con_lai = hd.so_tien_tra - hd.tong_tien
                 hd.save()
-                print("Input payment successfully!")
+                messages.success(request, 'Nhập số tiền trả cho hóa đơn thành công')
                 kh = KhachHang.objects.get(ma_kh=hd.ma_kh_id)
                 kh.so_tien_no -= hd.con_lai
                 kh.save()
-                print("The guest's debt has been updated!") 
+                messages.success(request, 'Số tiền nợ của khách hàng đã được cập nhật')
+                return redirect('input-payment')
 
-            return redirect('bookstore')
         else:
-            print("Input payment failed!")
+            messages.error(request, 'Biểu mẫu vừa nhập chưa hợp lệ')
     else:
         hoadon_form = HoaDonForm(prefix = "hoadon")
         cthd_form = CTHDForm(prefix = "cthd")
@@ -497,20 +542,17 @@ def createInventoryReport(request):
             if check_sach:
                 sach = Sach.objects.get(ma_sach=bcton.ma_sach_id)
             else:
-                print("Please input book id")
-                print("Create inventory report failed!")
+                messages.error(request, 'Vui lòng nhập mã sách')
                 return redirect('create-inventory-report')
 
             # Kiem tra thang da nhap hop le hay chua?
             if bcton.thang == None or bcton.thang < 1 or bcton.thang > 12:
-                print("Please input a valid month")
-                print("Create inventory report failed!")
+                messages.error(request, 'Tháng chưa hợp lệ, vui lòng nhập lại tháng')
                 return redirect('create-inventory-report')
 
             # Kiem tra nam da nhap hop le hay chua?
             if bcton.nam == None or bcton.nam < 1:
-                print("Please input a valid year")
-                print("Create inventory report failed!")
+                messages.error(request, 'Năm chưa hợp lệ, vui lòng nhập lại năm')
                 return redirect('create-inventory-report')
 
             # Kiem tra ma sach, thang, nam da co trong table BC_TON hay chua?
@@ -540,16 +582,15 @@ def createInventoryReport(request):
                 bcton.ton_dau = bcton.ton_cuoi - bcton.phat_sinh + sl_sach_ban
 
                 bcton.save()
-                print("Create inventory report successfully!")
+                messages.success(request, 'Lập báo cáo tồn thành công')
+                return redirect('create-inventory-report')
+                
             else:
-                print("Already has!")
-                print("Create inventory report failed!")
+                messages.error(request, 'Sách đã có trong báo cáo tồn tháng ' + str(bcton.thang) + ' năm ' + str(bcton.nam))
                 return redirect('create-inventory-report')
 
-            return redirect('bookstore')
-
         else:
-            print("Create inventory report failed!")
+            messages.error(request, 'Biểu mẫu vừa nhập chưa hợp lệ')
 
     else:
         bcton_form = BCTONForm(prefix = "bcton")
@@ -594,20 +635,17 @@ def createDebtReport(request):
             if check_khach_hang:
                 khachhang = KhachHang.objects.get(ma_kh=bccn.ma_kh_id)
             else:
-                print("Please input guest id")
-                print("Create debt report failed!")
+                messages.error(request, 'Vui lòng nhập mã khách hàng')
                 return redirect('create-debt-report')
 
             # Kiem tra thang da nhap hop le hay chua?
             if bccn.thang == None or bccn.thang < 1 or bccn.thang > 12:
-                print("Please input a valid month")
-                print("Create debt report failed!")
+                messages.error(request, 'Tháng chưa hợp lệ, vui lòng nhập lại tháng')
                 return redirect('create-debt-report')
 
             # Kiem tra nam da nhap hop le hay chua?
             if bccn.nam == None or bccn.nam < 1:
-                print("Please input a valid year")
-                print("Create debt report failed!")
+                messages.error(request, 'Năm chưa hợp lệ, vui lòng nhập lại năm')
                 return redirect('create-debt-report')
             
             # Kiem tra ma khach hang, thang, nam da co trong table BC_CONGNO hay chua?
@@ -637,16 +675,15 @@ def createDebtReport(request):
                 bccn.no_dau = bccn.no_cuoi - bccn.phat_sinh + tong_so_tien_kh_tra_no
             
                 bccn.save()
-                print("Create debt report successfully!")
+                messages.success(request, 'Lập báo cáo công nợ thành công')
             else:
-                print("Already has!")
-                print("Create debt report failed!")
+                messages.error(request, 'Khách hàng đã có trong báo cáo công nợ tháng ' + str(bccn.thang) + ' năm ' + str(bccn.nam))
                 return redirect('create-debt-report')
             
             return redirect('bookstore')
 
         else:
-            print("Create debt report failed!")
+            messages.error(request, 'Biểu mẫu vừa nhập chưa hợp lệ')
 
     else:
         bccn_form = BCCNForm(prefix = "bccn")

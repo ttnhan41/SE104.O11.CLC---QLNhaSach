@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book importing</title>
     <link rel="stylesheet" href="{% static 'styles/reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/alert.css' %}" />
     <link rel="stylesheet" href="{% static 'styles/book-import.css' %}" />
   </head>
 
@@ -14,8 +15,18 @@
       {% include 'navbar.html' %}
     </nav>
    
+    {% if messages %}
+    <div class="alert-container">
+      {% for message in messages %}
+      <div class="alert alert--{{message.tags}}">
+          <p class="alert__message">{{message}}</p>
+          <button class="alert__close">x</button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    
     <div id="input-box">
-      
       <div class="input-data">
         <a href="{% url 'bookstore' %}">
           <img class="arrow" src="{% static 'images/arrow.png' %}" >
@@ -80,10 +91,9 @@
             <div class="grid-item">
               <input type="submit" value="Lập phiếu">
             </div>
-        
         </form>
       </div>
-
     </div>
+    <script src="{% static 'js/alert.js' %}"></script>
   </body>
 </html> 
