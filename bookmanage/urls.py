@@ -20,6 +20,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static 
 
+admin.site.site_header = 'Administration'
+admin.site.index_title = 'Bookstore management'
+admin.site.site_title = 'Administration'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('bookstore/', include('bookstore.urls')),

@@ -2,6 +2,7 @@
 
 <ul>
     <li><a href="{% url 'bookstore' %}">Trang chủ</a></li>
+    <li><a href="{% url 'admin:index' %}">Trang quản trị</a></li>
     
     {% if request.user.is_authenticated %}
     <li><a href="{% url 'import-book' %}">Lập phiếu nhập sách</a></li>

@@ -193,19 +193,30 @@ def createReceipt(request):
             # Kiem tra ma khach hang da co trong table KhachHang hay chua?
             check_khach_hang = KhachHang.objects.filter(ma_kh=phieuthutien.ma_kh_id).exists()
             if check_khach_hang:
-                khachhang = KhachHang.objects.get(ma_kh=phieuthutien.ma_kh_id)
+                guest = KhachHang.objects.get(ma_kh=phieuthutien.ma_kh_id)
+                if khachhang.hoten_kh != None:
+                    guest.hoten_kh = khachhang.hoten_kh
+                if khachhang.dia_chi != None:
+                    guest.dia_chi = khachhang.dia_chi
+                if khachhang.dien_thoai != None:
+                    guest.dien_thoai = khachhang.dien_thoai
+                if khachhang.email != None:
+                    guest.email = khachhang.email
+
+                guest.save()
+
             else:
                 if khachhang.hoten_kh != None:
-                    khachhang = khachhang_form.save()
+                    guest = khachhang_form.save()
                 else:
                     messages.error(request, 'Vui lòng nhập mã khách hàng (nếu chưa có thì vui lòng nhập họ tên khách hàng, địa chỉ, số điện thoại, email)')
                     return redirect('create-receipt')
 
             phieuthutien = PhieuThuTien(
-                ma_kh=khachhang,
+                ma_kh=guest,
                 so_tien_thu=phieuthutien.so_tien_thu
             )
-            kh = KhachHang.objects.get(ma_kh=khachhang.ma_kh)
+            kh = KhachHang.objects.get(ma_kh=guest.ma_kh)
             if THAMSO.objects.all()[0].kiem_tra_so_tien_thu == True:
                 if phieuthutien.so_tien_thu <= kh.so_tien_no:
                     kh.so_tien_no -= phieuthutien.so_tien_thu
@@ -522,6 +533,7 @@ def changeRules(request):
         form = ThamSoForm(request.POST, instance=thamso)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Lưu thành công')
             return redirect('change-rules')
 
     context = {'form': form}
