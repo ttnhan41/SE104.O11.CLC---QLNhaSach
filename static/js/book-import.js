@@ -1,14 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     var ma_dau_sach = document.getElementById("id_cttg-ma_dau_sach");
     var ten_dau_sach = document.getElementById("id_dausach-ten_dau_sach");
+    var ma_the_loai = document.getElementById("id_dausach-ma_the_loai");
+    var ten_the_loai = document.getElementById("id_theloai-ten_the_loai");
 
     ma_dau_sach.addEventListener('input', function() {
         ten_dau_sach.disabled = ma_dau_sach.value.trim();
+        ma_the_loai.disabled = ten_dau_sach.disabled;
+        ten_the_loai.disabled = ten_dau_sach.disabled;
         ten_dau_sach.value = null;
+        ma_the_loai.value = null;
+        ten_the_loai.value = null;
     });
-
-    var ma_the_loai = document.getElementById("id_dausach-ma_the_loai");
-    var ten_the_loai = document.getElementById("id_theloai-ten_the_loai");
 
     ma_the_loai.addEventListener('input', function() {
         ten_the_loai.disabled = ma_the_loai.value.trim();
