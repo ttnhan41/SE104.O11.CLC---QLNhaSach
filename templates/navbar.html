@@ -2,9 +2,13 @@
 
 <ul>
     <li><a href="{% url 'bookstore' %}">Trang chủ</a></li>
-    <li><a href="{% url 'admin:index' %}">Trang quản trị</a></li>
     
     {% if request.user.is_authenticated %}
+
+    {% if request.user.is_superuser %}
+    <li><a href="{% url 'admin:index' %}">Trang quản trị</a></li>
+    {% endif %}
+    
     <li><a href="{% url 'import-book' %}">Lập phiếu nhập sách</a></li>
     <li><a href="{% url 'create-books-bill' %}">Lập hóa đơn bán sách</a></li>
     <li><a href="{% url 'create-receipt' %}">Lập phiếu thu tiền</a></li>
