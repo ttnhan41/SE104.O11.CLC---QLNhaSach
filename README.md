@@ -13,7 +13,7 @@
 * 2 - Clone repo từ GitHub và di chuyển vào thư mục:
 ```
 git clone https://github.com/ttnhan41/SE104.O11.CLC-QLNhaSach
-cd <path ti your file>/SE104.O11.CLC-QLNhaSach
+cd <path to your file>/SE104.O11.CLC-QLNhaSach
 ```
 * 3 - Tạo và kích hoạt môi trường ảo (virtual environment):
 ```
