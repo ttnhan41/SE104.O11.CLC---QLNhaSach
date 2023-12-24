@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.db.models import Q
 from .models import TheLoai, TacGia, DauSach, CT_TACGIA, Sach, PhieuNhapSach, CT_PNS, THAMSO, KhachHang, PhieuThuTien, HoaDon, CT_HD, BC_TON, BC_CONGNO
 from .forms import TheLoaiForm, TacGiaForm, DauSachForm, CTTGForm, SachForm, PhieuNhapSachForm, CTPNSForm, KhachHangForm, PhieuThuTienForm, HoaDonForm, CTHDForm, ThamSoForm, BCTONForm, BCCNForm
+from .pdf import html2pdf
 
 # Mo trang thong tin nha sach
 def bookstore(request):
@@ -60,6 +61,12 @@ def importBook(request):
                 if sach.nha_xuat_ban != None and sach.nam_xuat_ban == None:
                     messages.error(request, 'Vui lòng nhập thông tin năm xuất bản')
                     return redirect('import-book')
+
+            # Kiem tra sach da co trong phieu nhap sach chua?
+            check_ctpns = CT_PNS.objects.filter(ma_phieu_nhap=ctpns.ma_phieu_nhap_id, ma_sach=ctpns.ma_sach_id).exists()
+            if check_ctpns == True:
+                messages.error(request, 'Sách đã có trong phiếu nhập sách')
+                return redirect('import-book')
             
             # Kiem tra quy dinh
             if ctpns.so_luong_nhap < THAMSO.objects.all()[0].sl_nhap_toi_thieu:
@@ -172,9 +179,7 @@ def importBook(request):
                 phieunhapsach.save()
                 messages.success(request, 'Lập phiếu thành công')
                 return redirect('import-book')
-            else:
-                messages.error(request, 'Sách đã có trong phiếu nhập sách')
-                return redirect('import-book')
+            
         else:
             messages.error(request, 'Biểu mẫu vừa nhập chưa hợp lệ')
     else:
@@ -360,9 +365,10 @@ def createBooksBill(request):
             cthd = cthd_form.save(commit=False)
             
             # Kiem tra dau vao
-            if hoadon.ma_kh_id == None and khachhang.hoten_kh == None:
-                messages.error(request, 'Vui lòng nhập mã khách hàng (nếu chưa có thì vui lòng nhập họ tên khách hàng)')
-                return redirect('create-books-bill')
+            if cthd.ma_hoa_don_id == None:
+                if hoadon.ma_kh_id == None and khachhang.hoten_kh == None:
+                    messages.error(request, 'Vui lòng nhập mã khách hàng (nếu chưa có thì vui lòng nhập họ tên khách hàng)')
+                    return redirect('create-books-bill')
 
             check_sach = Sach.objects.filter(ma_sach=cthd.ma_sach_id).exists()
             if check_sach == False:
@@ -372,6 +378,12 @@ def createBooksBill(request):
             # Kiem tra so luong ban hop le hay chua?
             if cthd.so_luong_ban <= 0:
                 messages.error(request, 'Số lượng bán phải lớn hơn 0, vui lòng nhập lại số lượng bán')
+                return redirect('create-books-bill')
+
+            # Kiem tra sach da co trong hoa don chua?
+            check_cthd = CT_HD.objects.filter(ma_hoa_don=cthd.ma_hoa_don_id, ma_sach=cthd.ma_sach_id).exists()
+            if check_cthd == True:
+                messages.error(request, 'Sách đã có trong hóa đơn')
                 return redirect('create-books-bill')
 
             # Kiem tra quy dinh
@@ -434,9 +446,6 @@ def createBooksBill(request):
                 hoadon.tong_tien += cthd.thanh_tien
                 hoadon.save()
                 messages.success(request, 'Lập hóa đơn thành công')
-                return redirect('create-books-bill')
-            else:
-                messages.error(request, 'Sách đã có trong hóa đơn')
                 return redirect('create-books-bill')
             
         else:
@@ -694,7 +703,8 @@ def createDebtReport(request):
                 )
 
                 for guest in ds_kh_no:
-                    bccn.phat_sinh -= guest.con_lai
+                    if guest.con_lai < 0:
+                        bccn.phat_sinh -= guest.con_lai
 
                 ds_kh_tra_no = PhieuThuTien.objects.filter(
                     ngay_thu_tien__month=bccn.thang,
@@ -747,3 +757,73 @@ def searchDebtReport(request):
 
     context = {'report': report, 'search_month': search_month, 'search_year': search_year}
     return render(request, 'bookstore/search-debt-report.html', context)
+
+
+# In hoa don
+@login_required(login_url="login")
+def exportBill(request):
+    search_query = request.GET.get('search_query')
+    
+    bill_detail = CT_HD.objects.filter(
+        Q(ma_hoa_don__exact=search_query)
+    )
+    
+    if search_query != 0 and HoaDon.objects.filter(ma_hoa_don=search_query).count() != 0:
+        bill = HoaDon.objects.get(ma_hoa_don=search_query)
+    else:
+        bill = HoaDon.objects.filter(ma_hoa_don=search_query)
+
+    context = {'bill_detail': bill_detail, 'bill': bill, 'search_query': search_query}
+    pdf = html2pdf('bookstore/includes/bill.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+
+
+# In phieu nhap sach
+@login_required(login_url="login")
+def exportImportingNote(request):
+    search_query = request.GET.get('search_query')
+    
+    note_detail = CT_PNS.objects.filter(
+        Q(ma_phieu_nhap__exact=search_query)
+    )
+    
+    if search_query != 0 and PhieuNhapSach.objects.filter(ma_phieu_nhap=search_query).count() != 0:
+        note = PhieuNhapSach.objects.get(ma_phieu_nhap=search_query)
+    else:
+        note = PhieuNhapSach.objects.filter(ma_phieu_nhap=search_query)
+
+    context = {'note_detail': note_detail, 'note': note, 'search_query': search_query}
+    pdf = html2pdf('bookstore/includes/import-note.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+
+
+# In bao cao ton
+@login_required(login_url="login")
+def exportInventoryReport(request):
+    search_month = request.GET.get('search_month')
+    search_year = request.GET.get('search_year')
+    
+    report = BC_TON.objects.filter(
+        Q(thang__exact=search_month),
+        Q(nam__exact=search_year)
+    )
+    
+    context = {'report': report, 'search_month': search_month, 'search_year': search_year}
+    pdf = html2pdf('bookstore/includes/inventory-report.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+
+
+# In bao cao cong no
+@login_required(login_url="login")
+def exportDebtReport(request):
+    search_month = request.GET.get('search_month')
+    search_year = request.GET.get('search_year')
+    
+    report = BC_CONGNO.objects.filter(
+        Q(thang__exact=search_month),
+        Q(nam__exact=search_year)
+    )
+    
+    context = {'report': report, 'search_month': search_month, 'search_year': search_year}
+    pdf = html2pdf('bookstore/includes/debt-report.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')

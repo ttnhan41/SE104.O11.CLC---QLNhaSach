@@ -1,0 +1,37 @@
+<h2>Mã HD: {{bill.ma_hoa_don}}</h2>
+<!--<h2>Mã khách hàng: {{bill.ma_kh}}</h2>-->
+<h2>Họ tên khách hàng: {{bill.ma_kh.hoten_kh}}</h2>
+<h2>Ngày lập HD: {{bill.ngay_lap.day}}/{{bill.ngay_lap.month}}/{{bill.ngay_lap.year}}</h2>
+<table class="content-table">
+    <thead>
+        <tr>
+            <th>Mã sách</th>
+            <th>Tên sách</th>
+            <th>Số lượng bán</th>
+            <th>Đơn giá bán</th>
+            <th>Thành tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detail in bill_detail %}
+        <tr>
+            <td>{{detail.ma_sach}}</td>
+            <td>{{detail.ma_sach.ma_dau_sach.ten_dau_sach}}</td>
+            <td>{{detail.so_luong_ban}}</td>
+            <td>{{detail.don_gia_ban}}</td>
+            <td>{{detail.thanh_tien}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="grid-container">
+    <p class="grid-item-left"></p>
+    <span class="grid-item-left">Tổng tiền:</span>
+    <span class="grid-item-right">{{bill.tong_tien}}</span>
+    <p class="grid-item-left"></p>
+    <span class="grid-item-left">Số tiền trả:</span>
+    <span class="grid-item-right">{{bill.so_tien_tra}}</span>
+    <p class="grid-item-left"></p>
+    <span class="grid-item-left">Còn lại:</span>
+    <span class="grid-item-right">{{bill.con_lai}}</span>
+</div>

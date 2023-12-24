@@ -19,4 +19,8 @@ urlpatterns = [
     path('create-debt-report/', views.createDebtReport, name="create-debt-report"),
     path('search-debt-report/', views.searchDebtReport, name="search-debt-report"),
     path('change-rules/', views.changeRules, name="change-rules"),
+    path('bill/', views.exportBill, name="bill"),
+    path('import-note/', views.exportImportingNote, name="import-note"),
+    path('inventory-report/', views.exportInventoryReport, name="inventory-report"),
+    path('debt-report/', views.exportDebtReport, name="debt-report"),
 ]

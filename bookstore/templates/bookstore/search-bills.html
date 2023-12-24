@@ -22,42 +22,11 @@
 
 		<div class="books-bill">
 			<h1>Xem hóa đơn</h1>
-			<!--<h2>Mã khách hàng: {{bill.ma_kh}}</h2>-->
-			<h2>Họ tên khách hàng: {{bill.ma_kh.hoten_kh}}</h2>
-			<h2>Ngày lập hóa đơn: {{bill.ngay_lap.day}}/{{bill.ngay_lap.month}}/{{bill.ngay_lap.year}}</h2>
-			<table class="content-table">
-				<thead>
-					<tr>
-						<th>Mã sách</th>
-						<th>Tên sách</th>
-						<th>Số lượng bán</th>
-						<th>Đơn giá bán</th>
-						<th>Thành tiền</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for detail in bill_detail %}
-					<tr>
-						<td>{{detail.ma_sach}}</td>
-						<td>{{detail.ma_sach.ma_dau_sach.ten_dau_sach}}</td>
-						<td>{{detail.so_luong_ban}}</td>
-						<td>{{detail.don_gia_ban}}</td>
-						<td>{{detail.thanh_tien}}</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			<div class="grid-container">
-				<span class="grid-item-left"></span>
-				<span class="grid-item-left">Tổng tiền:</span>
-				<span class="grid-item-right">{{bill.tong_tien}}</span>
-				<span class="grid-item-left"></span>
-				<span class="grid-item-left">Số tiền trả:</span>
-				<span class="grid-item-right">{{bill.so_tien_tra}}</span>
-				<span class="grid-item-left"></span>
-				<span class="grid-item-left">Còn lại:</span>
-				<span class="grid-item-right">{{bill.con_lai}}</span>
-			</div>
+
+			{% include 'bookstore/includes/bill.html' %}
+
+			<a href="{% url 'bill' %}?search_query={{search_query}}" type="button" class="bill">In hóa đơn</a>
+
 		</div>
 	</body>
 </html>

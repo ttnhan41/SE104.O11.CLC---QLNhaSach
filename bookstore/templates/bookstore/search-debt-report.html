@@ -30,29 +30,13 @@
 
 		<div class="report">
 			<h1>Xem báo cáo công nợ</h1>
-			<h2>{{search_month}}/{{search_year}}</h2>
-			<table class="content-table">
-				<thead>
-					<tr>
-						<th>Mã khách hàng</th>
-						<th>Tên khách hàng</th>
-						<th>Nợ đầu</th>
-						<th>Phát sinh</th>
-						<th>Nợ cuối</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for detail in report %}
-					<tr>
-						<td>{{detail.ma_kh}}</td>
-						<td>{{detail.ma_kh.hoten_kh}}</td>
-						<td>{{detail.no_dau}}</td>
-						<td>{{detail.phat_sinh}}</td>
-						<td>{{detail.no_cuoi}}</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+
+			{% include 'bookstore/includes/debt-report.html' %}
+
+			<a href="{% url 'debt-report' %}?search_month={{search_month}}&search_year={{search_year}}" type="button" class="report">
+				In báo cáo
+			</a>
+
 		</div>
 	</body>
 </html>
