@@ -1,0 +1,22 @@
+<h2>Mã phiếu thu tiền: {{receipt.ma_phieu_thu}}</h2>
+<h2>Ngày thu tiền: 
+    {% if receipt %}
+    {{receipt.ngay_thu_tien.day}}/{{receipt.ngay_thu_tien.month}}/{{receipt.ngay_thu_tien.year}}
+    {% endif %}
+</h2>
+<table class="content-table">
+    <thead>
+        <tr>
+            <th>Mã khách hàng</th>
+            <th>Họ tên khách hàng</th>
+            <th>Số tiền thu</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{receipt.ma_kh}}</td>
+            <td>{{receipt.ma_kh.hoten_kh}}</td>
+            <td>{{receipt.so_tien_thu}}</td>
+        </tr>
+    </tbody>
+</table>

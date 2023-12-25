@@ -555,6 +555,23 @@ def searchImportNotes(request):
     return render(request, 'bookstore/search-import-notes.html', context)
 
 
+# Tra cuu phieu thu tien
+@login_required(login_url="login")
+def searchReceipts(request):
+    search_query = 0
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+
+    if search_query != 0 and PhieuThuTien.objects.filter(ma_phieu_thu=search_query).count() != 0:
+        receipt = PhieuThuTien.objects.get(ma_phieu_thu=search_query)
+    else:
+        receipt = PhieuThuTien.objects.filter(ma_phieu_thu=search_query)
+
+    context = {'receipt': receipt, 'search_query': search_query}
+    return render(request, 'bookstore/search-receipts.html', context)
+
+
 # Thay doi quy dinh
 @login_required(login_url="login")
 def changeRules(request):
@@ -794,6 +811,21 @@ def exportImportingNote(request):
 
     context = {'note_detail': note_detail, 'note': note, 'search_query': search_query}
     pdf = html2pdf('bookstore/includes/import-note.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+
+
+# In phieu thu tien
+@login_required(login_url="login")
+def exportReceipt(request):
+    search_query = request.GET.get('search_query')
+
+    if search_query != 0 and PhieuThuTien.objects.filter(ma_phieu_thu=search_query).count() != 0:
+        receipt = PhieuThuTien.objects.get(ma_phieu_thu=search_query)
+    else:
+        receipt = PhieuThuTien.objects.filter(ma_phieu_thu=search_query)
+    
+    context = {'receipt': receipt, 'search_query': search_query}
+    pdf = html2pdf('bookstore/includes/receipt.html', context)
     return HttpResponse(pdf, content_type='application/pdf')
 
 

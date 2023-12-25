@@ -45,9 +45,9 @@ nav li a:hover, nav li a:active {
 #input-box {
   display: block;
   position: relative;
-  margin: 120px auto 0px auto;
+  margin: 120px auto 120px auto;
   width: 850px;
-  height: 320px;
+  height: 250px;
   border: black;
   background: white;
   border-radius: 20px;
@@ -64,7 +64,7 @@ form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
-  margin: 60px 5px;
+  margin: 40px 5px;
 }
 
 .grid-item {
@@ -79,6 +79,12 @@ form {
 
 .grid-item span:first-child {
   width: 120px;
+}
+
+.grid-item:last-child {
+  grid-column-start: 1;
+  grid-column-end: -1;
+  justify-content: center;
 }
 
 a {
@@ -98,7 +104,7 @@ input[type="number"] {
 }
 
 input[type="submit"] {
-  margin-top: 10px;
+  margin-top: 30px;
   height: 30px;
   width: 150px;
   background: black;

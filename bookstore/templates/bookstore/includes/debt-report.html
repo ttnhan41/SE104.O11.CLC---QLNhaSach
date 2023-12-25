@@ -10,6 +10,7 @@
         </tr>
     </thead>
     <tbody>
+        {% if report %}
         {% for detail in report %}
         <tr>
             <td>{{detail.ma_kh}}</td>
@@ -19,5 +20,14 @@
             <td>{{detail.no_cuoi}}</td>
         </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endif %}
     </tbody>
 </table>

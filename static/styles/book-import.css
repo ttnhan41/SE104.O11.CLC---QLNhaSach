@@ -45,9 +45,9 @@ nav li a:hover, nav li a:active {
 #input-box {
   display: block;
   position: relative;
-  margin: 80px auto 0px auto;
+  margin: 80px auto 80px auto;
   width: 850px;
-  height: 510px;
+  height: 550px;
   border: black;
   background: white;
   border-radius: 20px;
@@ -78,6 +78,12 @@ form {
 
 .grid-item span:first-child {
   width: 120px;
+}
+
+.grid-item:last-child {
+  grid-column-start: 1;
+  grid-column-end: -1;
+  justify-content: center;
 }
 
 a {

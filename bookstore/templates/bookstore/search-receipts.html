@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Receipt search</title>
+		<link rel="stylesheet" href="{% static 'styles/reset.css' %}">
+		<link rel="stylesheet" href="{% static 'styles/search-receipts.css' %}">
+		<link rel="stylesheet" href="{% static 'styles/font-awesome.min.css' %}">
+	</head>
+	<body>
+		<nav>
+			{% include 'navbar.html' %}   
+		</nav>
+
+		<form class="form" action="{% url 'search-receipts' %}" method="get">
+			<label for="receipts-search"><b>Nhập mã phiếu thu tiền</b>:</label>
+			<input type="search" id="receipts-search" name="search_query" value="{{search_query}}">
+			<input type="submit" value="Tìm kiếm">
+		</form>
+
+		<div class="receipt">
+			<h1>Xem phiếu thu tiền</h1>
+
+			{% include 'bookstore/includes/receipt.html' %}
+
+			<a href="{% url 'receipt' %}?search_query={{search_query}}" type="button" class="note">In phiếu</a>
+
+		</div>
+	</body>
+</html>

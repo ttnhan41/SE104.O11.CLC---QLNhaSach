@@ -1,7 +1,11 @@
 <h2>Mã HD: {{bill.ma_hoa_don}}</h2>
 <!--<h2>Mã khách hàng: {{bill.ma_kh}}</h2>-->
 <h2>Họ tên khách hàng: {{bill.ma_kh.hoten_kh}}</h2>
-<h2>Ngày lập HD: {{bill.ngay_lap.day}}/{{bill.ngay_lap.month}}/{{bill.ngay_lap.year}}</h2>
+<h2>Ngày lập HD: 
+    {% if bill %}
+    {{bill.ngay_lap.day}}/{{bill.ngay_lap.month}}/{{bill.ngay_lap.year}}
+    {% endif %}
+</h2>
 <table class="content-table">
     <thead>
         <tr>
@@ -13,6 +17,7 @@
         </tr>
     </thead>
     <tbody>
+        {% if bill_detail %}
         {% for detail in bill_detail %}
         <tr>
             <td>{{detail.ma_sach}}</td>
@@ -22,6 +27,15 @@
             <td>{{detail.thanh_tien}}</td>
         </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endif %}
     </tbody>
 </table>
 <div class="grid-container">

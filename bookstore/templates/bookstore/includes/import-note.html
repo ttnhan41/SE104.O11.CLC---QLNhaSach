@@ -1,5 +1,9 @@
 <h2>Mã phiếu nhập sách: {{note.ma_phieu_nhap}}</h2>
-<h2>Ngày nhập: {{note.ngay_nhap.day}}/{{note.ngay_nhap.month}}/{{note.ngay_nhap.year}}</h2>
+<h2>Ngày nhập: 
+    {% if note %}
+    {{note.ngay_nhap.day}}/{{note.ngay_nhap.month}}/{{note.ngay_nhap.year}}
+    {% endif %}
+</h2>
 <h2>Tổng tiền: {{note.tong_tien}}</h2>
 <table class="content-table">
     <thead>
@@ -12,6 +16,7 @@
         </tr>
     </thead>
     <tbody>
+        {% if note_detail %}
         {% for detail in note_detail %}
         <tr>
             <td>{{detail.ma_sach}}</td>
@@ -21,5 +26,14 @@
             <td>{{detail.thanh_tien}}</td>
         </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endif %}
     </tbody>
 </table>

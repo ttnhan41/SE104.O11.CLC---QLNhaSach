@@ -10,6 +10,7 @@
         </tr>
     </thead>
     <tbody>
+        {% if report %}
         {% for detail in report %}
         <tr>
             <td>{{detail.ma_sach}}</td>
@@ -19,5 +20,14 @@
             <td>{{detail.ton_cuoi}}</td>
         </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endif %}
     </tbody>
 </table>

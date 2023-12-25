@@ -7,6 +7,7 @@ urlpatterns = [
     path('import-book/', views.importBook, name="import-book"),
     path('search-import-notes/', views.searchImportNotes, name="search-import-notes"),
     path('create-receipt/', views.createReceipt, name="create-receipt"),
+    path('search-receipts/', views.searchReceipts, name="search-receipts"),
     path('search-books/', views.searchBooks, name="search-books"),
     path('search-authors/', views.searchAuthors, name="search-authors"),
     path('search-categories/', views.searchCategories, name="search-categories"),
@@ -21,6 +22,7 @@ urlpatterns = [
     path('change-rules/', views.changeRules, name="change-rules"),
     path('bill/', views.exportBill, name="bill"),
     path('import-note/', views.exportImportingNote, name="import-note"),
+    path('receipt/', views.exportReceipt, name="receipt"),
     path('inventory-report/', views.exportInventoryReport, name="inventory-report"),
     path('debt-report/', views.exportDebtReport, name="debt-report"),
 ]
