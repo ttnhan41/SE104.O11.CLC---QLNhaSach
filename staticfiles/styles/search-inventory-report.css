@@ -65,7 +65,9 @@ nav li a:link, nav li a:visited {
 }
 
 nav li a:hover, nav li a:active {
-  border: solid 1px white;
+  background-color: white;
+  color: black;
+  font-weight: 400;
 }
 
 form {

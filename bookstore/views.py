@@ -665,13 +665,23 @@ def createInventoryReport(request):
 # Tra cuu bao cao ton
 @login_required(login_url="login")
 def searchInventoryReport(request):
-    search_month = 0
-    search_year = 0
+    search_month = 1
+    search_year = 1
 
     if request.GET.get('search_month'):
         search_month = request.GET.get('search_month')
     if request.GET.get('search_year'):
         search_year = request.GET.get('search_year')
+
+    # Kiem tra thang da nhap hop le hay chua?
+    if int(search_month) < 1 or int(search_month) > 12:
+        messages.error(request, 'Tháng chưa hợp lệ, vui lòng nhập lại tháng')
+        return redirect('search-inventory-report')
+
+    # Kiem tra nam da nhap hop le hay chua?
+    if int(search_year) < 1:
+        messages.error(request, 'Năm chưa hợp lệ, vui lòng nhập lại năm')
+        return redirect('search-inventory-report')
     
     report = BC_TON.objects.filter(
         Q(thang__exact=search_month),
@@ -759,13 +769,23 @@ def createDebtReport(request):
 # Tra cuu bao cao cong no
 @login_required(login_url="login")
 def searchDebtReport(request):
-    search_month = 0
-    search_year = 0
+    search_month = 1
+    search_year = 1
 
     if request.GET.get('search_month'):
         search_month = request.GET.get('search_month')
     if request.GET.get('search_year'):
         search_year = request.GET.get('search_year')
+
+    # Kiem tra thang da nhap hop le hay chua?
+    if int(search_month) < 1 or int(search_month) > 12:
+        messages.error(request, 'Tháng chưa hợp lệ, vui lòng nhập lại tháng')
+        return redirect('search-debt-report')
+
+    # Kiem tra nam da nhap hop le hay chua?
+    if int(search_year) < 1:
+        messages.error(request, 'Năm chưa hợp lệ, vui lòng nhập lại năm')
+        return redirect('search-debt-report')
     
     report = BC_CONGNO.objects.filter(
         Q(thang__exact=search_month),
