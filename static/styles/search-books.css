@@ -50,6 +50,14 @@ nav li a:hover, nav li a:active {
   font-weight: 400;
 }
 
+h1 {
+  margin-bottom: 25px;
+  padding-top: 30px;
+  font-weight: 300;
+  font-size: 28px;
+  text-align: center;
+}
+
 form {
   display: flex;
   flex-direction: row;
