@@ -1,0 +1,7 @@
+User account:
++ Username: user
++ Password: bookstore
+
+Admin account:
++ Username: admin
++ Password: 123
