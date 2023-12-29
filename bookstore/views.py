@@ -67,6 +67,11 @@ def importBook(request):
             if check_ctpns == True:
                 messages.error(request, 'Sách đã có trong phiếu nhập sách')
                 return redirect('import-book')
+
+            # Kiem tra don gia nhap hop le hay chua?
+            if ctpns.don_gia_nhap < 0:
+                messages.error(request, 'Đơn giá nhập phải lớn hơn hoặc bằng 0')
+                return redirect('import-book')
             
             # Kiem tra quy dinh
             if ctpns.so_luong_nhap < THAMSO.objects.all()[0].sl_nhap_toi_thieu:
@@ -214,6 +219,11 @@ def createReceipt(request):
             khachhang = khachhang_form.save(commit=False)
             phieuthutien = phieuthutien_form.save(commit=False)
 
+            # Kiem tra so tien thu hop le hay chua?
+            if phieuthutien.so_tien_thu <= 0:
+                messages.error(request, 'Số tiền thu phải lớn hơn 0')
+                return redirect('create-receipt')
+            
             # Kiem tra ma khach hang da co trong table KhachHang hay chua?
             check_khach_hang = KhachHang.objects.filter(ma_kh=phieuthutien.ma_kh_id).exists()
             if check_khach_hang:
