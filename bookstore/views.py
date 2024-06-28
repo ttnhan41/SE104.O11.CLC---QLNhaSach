@@ -889,3 +889,13 @@ def exportDebtReport(request):
     context = {'report': report, 'search_month': search_month, 'search_year': search_year}
     pdf = html2pdf('bookstore/includes/debt-report.html', context)
     return HttpResponse(pdf, content_type='application/pdf')
+
+
+# Hien thi 3 sach duoc ban gan day
+'''@login_required(login_url="login")
+def filterRecentlySelledBooks(request):
+    books = CT_HD.objects.all().order_by('-ma_hoa_don__ngay_lap')[:3]
+    print(books)
+
+    context = {'books': books}
+    return render(request, 'bookstore/bookstore-info.html', context)'''

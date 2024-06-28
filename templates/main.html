@@ -13,29 +13,59 @@
   </head>
 
   <body>
-    <input type="checkbox" id="check" />
+    <!--<input type="checkbox" id="check" />
     <label for="check">
       <i class="fas fa-bars" id="btn"></i>
       <i class="fas fa-times" id="cancel"></i>
-    </label>
-    <h1 class="hp-text1">Phần mềm quản lý nhà sách</h1>
-    <div class="intro">
-      <p>
-        Trong thời đại công nghệ thông tin phát triển mạnh mẽ, việc ứng dụng công nghệ thông tin trong quản lý 
-        kinh doanh là một xu hướng tất yếu. Đối với các nhà sách, việc xây dựng phần mềm quản lý là một giải pháp 
-        hữu ích để nâng cao hiệu quả hoạt động, giảm thiểu sai sót và tiết kiệm thời gian, chi phí. Phần mềm quản lý 
-        nhà sách cho phép nhân viên có thể quản lý tồn kho sách thông qua việc nhập sách, bán sách và thống kê sách. 
-        Ngoài ra, phần mềm cho phép quản lý thông tin khách hàng, theo dõi các khoản thu, nợ để đảm bảo việc quản lý 
-        tài chính một cách dễ dàng, hiệu quả.
-      </p>
-    </div>
+    </label>-->
+    
     <div class="sidebar">
       <header>Menu</header>
       {% include 'navbar.html' %}
     </div>
 
-    <section>     
+    {% if request.user.is_authenticated %}
+    <section>
+      <div class="revenue">
+        <img src="../static/images/dollar-icon.png">
+        <div class="revenue-text">
+          <p>Tổng thu nhập</p>
+          <h2>124.587.000 VND</h2>
+        </div>
+      </div>
+      <div class="recently-selled">
+        <h1>Các sách được bán gần đây</h1>
+        <div class="recently-selled-book-list">
+
+          <div class="recently-selled-book">
+            <img src="../static/images/harry-potter-chamber-of-secrets.jpg">
+            <h2>Harry Potter And The Chamber Of Secrets</h2>
+            <p>J. K. Rowling</p>
+          </div>
+          <div class="recently-selled-book">
+            <img src="../static/images/harry-potter-philosopher-stone.jpg">
+            <h2>Harry Potter and the Philosopher's Stone</h2>
+            <p>J. K. Rowling</p>
+          </div>
+          <div class="recently-selled-book">
+            <img src="../static/images/conan-1.jpg">
+            <h2>Conan 1</h2>
+            <p>Gosho Aoyama</p>
+          </div>
+          
+        </div>
+      </div>
     </section>
+    {% else %}
+    <section class="guest-box">
+      <div class="message-box">
+        <div class="welcome-message">
+          <h1>Chào mừng đến với website quản lý nhà sách!</h1>
+          <p>Nếu bạn là nhân viên nhà sách thì hãy <a href="{% url 'login' %}">đăng nhập</a> để có thể làm việc.</p>
+        </div>
+      </div>
+    </section>
+    {% endif %}
     
   </body>
 </html>

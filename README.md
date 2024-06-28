@@ -1,4 +1,4 @@
-# Project: Quản lý nhà sách - SE104
+# Project: Bookstore Management Web App - SE104
 # Board: https://trello.com/b/54UrvM8w/qlnsse104
 # Members:
 * 21522411 - Trần Trọng Nhân
@@ -8,23 +8,27 @@
 * 21522557 - Trần Thanh Sơn
 
 # Installation:
-### Lưu ý nên chạy cmd dưới quyền admin 
-* 1 - Tải python phiên bản mới nhất
-* 2 - Clone repo từ GitHub và di chuyển vào thư mục:
+### Recommend running CMD as administrator
+* 1 - Download the latest version of Python
+* 2 - Clone repo from GitHub and change directory into the folder:
 ```
 git clone https://github.com/ttnhan41/SE104.O11.CLC-QLNhaSach
+```
+```
 cd <path to your file>/SE104.O11.CLC-QLNhaSach
 ```
-* 3 - Tạo và kích hoạt môi trường ảo (virtual environment):
+* 3 - Create and activate the virtual environment:
 ```
 python -m venv venv
+```
+```
 .\venv\Scripts\activate
 ```
-* 4 - Cài đặt các thư viện cần thiết:
+* 4 - Install libraries:
 ```
 pip install -r requirements.txt
 ```
-* 5 - Chạy server Django:
+* 5 - Run Django server:
 ```
 python manage.py runserver
 ```
