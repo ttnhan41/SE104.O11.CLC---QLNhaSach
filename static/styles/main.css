@@ -10,13 +10,29 @@ body {
   padding: 0;
   list-style: none;
   text-decoration: none;
+  overflow-x: hidden;
+}
+
+.menu-button {
+  position: fixed;
+  width: 50px;
+  top: 11px;
+  left: 5px;
+  display: none;
+}
+
+.menu-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .sidebar {
+  display: block;
   position: fixed;
-  /*left: -300px;*/
   width: 300px;
-  height: 100%;
+  max-width: calc(100% - 20px);
+  height: 100vh;
   background: #353634;
   transition: all 0.5s ease;
 }
@@ -47,64 +63,11 @@ ul li:hover {
   padding-left: 30px;
 }
 
-/*#check {
-  display: none;
-}
-
-label #btn,
-label #cancel {
-  position: absolute;
-  cursor: pointer;
-  background: black;
-  border-radius: 3px;
-}
-
-label #btn {
-  left: 160px;
-  top: 57px;
-  font-size: 35px;
-  color: white;
-  padding: 6px 12px;
-  transition: all 0.5s;
-}
-
-label #cancel {
-  z-index: 1111;
-  left: -195px;
-  top: 73px;
-  font-size: 30px;
-  color: white;
-  padding: 4px 9px;
-  transition: all 0.5s ease;
-}
-
-#check:checked ~ .sidebar {
-  left: 0;
-}
-
-#check:checked ~ label #btn {
-  left: 250px;
-  opacity: 0;
-  pointer-events: none;
-}
-
-#check:checked ~ label #cancel {
-  left: 259px;
-}*/
-
 section {
-  /*background: url("../images/bookstore-bg.jpg") no-repeat;
-  background-position: center;
-  background-size: cover;*/
   height: 100%;
   margin-left: 300px;
   padding-top: 20px;
 }
-
-/*#check:checked ~ section {
-  margin-left: 250px;
-  transition: all 0.5s ease;
-}*/
 
 .revenue {
   display: flex;
@@ -130,72 +93,78 @@ section {
   color: rgb(121, 121, 121);
 }
 
-.recently-selled {
-  margin: 50px auto 0px auto;
+.recently-sold {
+  margin: 50px auto;
   padding-top: 20px;
   max-width: 80%;
-  height: 470px;
+  height: 510px;
   border: black;
   border-radius: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
   box-sizing: border-box;
 }
 
-.recently-selled h1 {
+.recently-sold h1 {
   text-align: center;
   font-size: 2rem;
 }
 
-.recently-selled-book-list {
-  padding: 50px 10px 30px 10px;
+.recently-sold-book-list {
+  padding: 50px 10px 0px 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-.recently-selled-book {
+.recently-sold-book {
   max-width: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 5px;
 }
 
-.recently-selled-book img {
+.recently-sold-book img {
   max-width: 50%;
   margin-bottom: 20px;
 }
 
-.recently-selled-book h2, .recently-selled-book p {
+.recently-sold-book h2, .recently-sold-book p {
   text-align: center;
   margin-top: 10px;
 }
 
-.recently-selled-book h2 {
+.recently-sold-book h2 {
   font-size: 1.4rem;
 }
 
-.recently-selled-book p {
+.recently-sold-book p {
   color: rgb(121, 121, 121);
 }
 
 .guest-box {
   background: url("../images/bookstore-bg-alt.jpg") no-repeat;
   background-size: cover;
-  height: 709px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0;
 }
 
 .message-box {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 250px auto;
+  margin: 0 auto;
   min-height: 120px;
+  max-height: 150px;
   max-width: 800px;
   border: black;
   border-radius: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
   box-sizing: border-box;
   background: transparent;
+  padding: 20px 40px;
 }
 
 .welcome-message h1 {
@@ -204,4 +173,36 @@ section {
 
 .welcome-message a {
   color: blue;
+}
+
+@media only screen and (max-width: 622px) {
+  section {
+    margin: 0;
+    padding: 0;
+  }
+  .sidebar {
+    min-width: 100%;
+  }
+  .menu-button {
+    display: block;
+  }
+  .guest-box {
+    background: url("../images/bookstore-bg-alt.jpg") no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    padding: 0;
+  }
+  .revenue {
+    margin-top: 100px;
+  }
+  .recently-sold h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .recently-sold-book h2 {
+    font-size: 1rem;
+  }
 }

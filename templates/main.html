@@ -9,19 +9,19 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <script src="{% static 'js/menu-toggle.js' %}"></script>
     <title>Bookstore</title>
   </head>
 
   <body>
-    <!--<input type="checkbox" id="check" />
-    <label for="check">
-      <i class="fas fa-bars" id="btn"></i>
-      <i class="fas fa-times" id="cancel"></i>
-    </label>-->
-    
     <div class="sidebar">
-      <header>Menu</header>
-      {% include 'navbar.html' %}
+      <button class="menu-button" onclick="toggleMenu()">
+        <img src="../static/images/menu-icon.png" alt="menu-icon">
+      </button>
+      <div id="nav">
+        <header>Menu</header>
+        {% include 'navbar.html' %}
+      </div>
     </div>
 
     {% if request.user.is_authenticated %}
@@ -33,21 +33,21 @@
           <h2>124.587.000 VND</h2>
         </div>
       </div>
-      <div class="recently-selled">
+      <div class="recently-sold">
         <h1>Các sách được bán gần đây</h1>
-        <div class="recently-selled-book-list">
+        <div class="recently-sold-book-list">
 
-          <div class="recently-selled-book">
+          <div class="recently-sold-book">
             <img src="../static/images/harry-potter-chamber-of-secrets.jpg">
             <h2>Harry Potter And The Chamber Of Secrets</h2>
             <p>J. K. Rowling</p>
           </div>
-          <div class="recently-selled-book">
+          <div class="recently-sold-book">
             <img src="../static/images/harry-potter-philosopher-stone.jpg">
             <h2>Harry Potter and the Philosopher's Stone</h2>
             <p>J. K. Rowling</p>
           </div>
-          <div class="recently-selled-book">
+          <div class="recently-sold-book">
             <img src="../static/images/conan-1.jpg">
             <h2>Conan 1</h2>
             <p>Gosho Aoyama</p>
